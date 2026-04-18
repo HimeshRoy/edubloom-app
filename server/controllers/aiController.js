@@ -1,37 +1,31 @@
-import OpenAI from "openai";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import fetch from "node-fetch";
 
 export const askAI = async (req, res) => {
   try {
     const { question } = req.body;
 
-    if (!question) {
-      return res.status(400).json({ message: "Question required" });
-    }
-
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You are a helpful CBSE student tutor. Explain simply.",
-        },
-        {
-          role: "user",
-          content: question,
-        },
-      ],
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "mistralai/mistral-7b-instruct",
+        messages: [
+          { role: "user", content: question }
+        ]
+      })
     });
 
+    const data = await response.json();
+
     res.json({
-      answer: response.choices[0].message.content,
+      answer: data.choices[0].message.content
     });
 
   } catch (err) {
-    console.log("AI ERROR 👉", err);
+    console.log(err);
     res.status(500).json({ message: "AI error" });
   }
 };
