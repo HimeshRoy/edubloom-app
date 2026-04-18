@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import pdfParse from "pdf-parse";
 
 export const askAI = async (req, res) => {
     try {
@@ -78,8 +79,6 @@ export const askImageAI = async (req, res) => {
     res.status(500).json({ message: "Image AI failed" });
   }
 };
-
-import pdfParse from "pdf-parse";
 
 export const askPDFAI = async (req, res) => {
   try {
