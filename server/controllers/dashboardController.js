@@ -1,8 +1,10 @@
+import User from "../models/User.js";
+
 export const getDashboard = async (req, res) => {
   try {
-    const user = req.user;
 
-    // 🔥 dummy for now (later DB se aayega)
+    const user = await User.findById(req.user.id);
+
     const data = {
       name: user.name,
       studentId: user.studentId,
@@ -14,10 +16,7 @@ export const getDashboard = async (req, res) => {
       },
 
       todayClasses: [
-        {
-          subject: "Math",
-          time: "5:00 PM",
-        },
+        { subject: "Math", time: "5:00 PM" },
       ],
 
       analytics: [
