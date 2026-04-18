@@ -1,13 +1,8 @@
 import fetch from "node-fetch";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-
-const pdfParse = require("pdf-parse");
 
 export const askAI = async (req, res) => {
     try {
-        const { question } = req.body;
-
+        const { messages } = req.body;
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -16,9 +11,7 @@ export const askAI = async (req, res) => {
             },
             body: JSON.stringify({
                 model: "meta-llama/llama-3.3-70b-instruct",
-                messages: [
-                    { role: "user", content: question }
-                ]
+                messages: messages
             })
         });
 
@@ -40,84 +33,4 @@ export const askAI = async (req, res) => {
         console.log(err);
         res.status(500).json({ message: "AI error" });
     }
-};
-
-export const askImageAI = async (req, res) => {
-  try {
-    const { image } = req.body;
-
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemma-3-4b-it:free",
-        messages: [
-          {
-            role: "user",
-            content: [
-              { type: "text", text: "Explain this image clearly" },
-              {
-                type: "image_url",
-                image_url: {
-                  url: `data:image/jpeg;base64,${image}`,
-                },
-              },
-            ],
-          },
-        ],
-      }),
-    });
-
-    const data = await response.json();
-
-    res.json({
-      answer: data.choices[0].message.content,
-    });
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Image AI failed" });
-  }
-};
-
-export const askPDFAI = async (req, res) => {
-  try {
-    const pdfBuffer = req.file.buffer;
-
-    const data = await pdfParse(pdfBuffer);
-
-    const text = data.text.slice(0, 5000);
-
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemma-3-4b-it:free",
-        messages: [
-          {
-            role: "user",
-            content: `Explain this PDF in simple terms:\n${text}`,
-          },
-        ],
-      }),
-    });
-
-    const result = await response.json();
-
-    console.log("PDF AI RESPONSE 👉", result); // debug
-
-    res.json({
-      answer: result.choices?.[0]?.message?.content || "No response",
-    });
-
-  } catch (err) {
-    console.log("PDF ERROR 👉", err);
-    res.status(500).json({ message: "PDF AI failed" });
-  }
 };

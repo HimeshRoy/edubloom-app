@@ -7,97 +7,33 @@ export default function AIChatbot() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
 
     const userMsg = input;
 
-    // show user instantly
-    setMessages((prev) => [...prev, { role: "user", text: userMsg }]);
+    const updatedMessages = [...messages, { role: "user", content: userMsg }];
 
+    setMessages(updatedMessages);
     setInput("");
     setLoading(true);
 
     try {
       const res = await API.post("/ai", {
-        question: userMsg,
-      });
-
-      setMessages((prev) => [...prev, { role: "ai", text: res.data.answer }]);
-    } catch (err) {
-      setMessages((prev) => [
-        ...prev,
-        { role: "ai", text: "Something went wrong" },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePDF = async (file) => {
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append("pdf", file);
-
-  setLoading(true);
-
-  try {
-    const res = await API.post("/ai/pdf", formData);
-
-    setMessages((prev) => [
-      ...prev,
-      { role: "ai", text: res.data.answer },
-    ]);
-  } catch (err) {
-    console.log(err);
-  } finally {
-    setLoading(false);
-  }
-};
-
-const handleImage = async (file) => {
-  if (!file) return;
-
-  const reader = new FileReader();
-
-  reader.onloadend = async () => {
-    const base64 = reader.result.split(",")[1];
-
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", text: "🖼 Image uploaded" },
-    ]);
-
-    setLoading(true);
-
-    try {
-      const res = await API.post("/ai/image", {
-        image: base64,
+        messages: updatedMessages,
       });
 
       setMessages((prev) => [
         ...prev,
-        { role: "ai", text: res.data.answer },
+        { role: "ai", content: res.data.answer },
       ]);
     } catch (err) {
-      console.log(err);
+      setMessages((prev) => [...prev, { role: "ai", content: "Error" }]);
     } finally {
       setLoading(false);
     }
   };
-
-  reader.readAsDataURL(file);
-};
-
-
-  useEffect(() => {
-    const handleClick = () => setShowMenu(false);
-    window.addEventListener("click", handleClick);
-    return () => window.removeEventListener("click", handleClick);
-  }, []);
 
   return (
     <>
@@ -129,7 +65,7 @@ const handleImage = async (file) => {
                     : "bg-gray-200"
                 }`}
               >
-                {msg.text}
+                {msg.content}
               </div>
             ))}
 
@@ -140,48 +76,6 @@ const handleImage = async (file) => {
 
           {/* INPUT */}
           <div className="p-2 border-t flex items-center gap-2 relative">
-            {/* ➕ BUTTON */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowMenu(!showMenu);
-              }}
-              className="bg-gray-200 p-2 rounded-full hover:bg-gray-300"
-            >
-              +
-            </button>
-
-            {/* POPUP MENU */}
-            {showMenu && (
-              <div className="absolute bottom-12 left-0 bg-white shadow-xl rounded-xl p-3 w-52 z-50">
-                <label className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded cursor-pointer">
-                  📷 Upload Image
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      handleImage(e.target.files[0]);
-                      setShowMenu(false);
-                    }}
-                    hidden
-                  />
-                </label>
-
-                <label className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded cursor-pointer">
-                  📄 Upload PDF
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={(e) => {
-                      handlePDF(e.target.files[0]);
-                      setShowMenu(false);
-                    }}
-                    hidden
-                  />
-                </label>
-              </div>
-            )}
-
             {/* INPUT */}
             <input
               value={input}
