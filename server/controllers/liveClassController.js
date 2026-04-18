@@ -1,17 +1,16 @@
+import LiveClass from "../models/LiveClass.js";
+
 export const getLiveClasses = async (req, res) => {
   try {
-    const classes = [
-      {
-        id: 1,
-        subject: "Math",
-        teacher: "Sharma Sir",
-        time: "5:00 PM",
-        meetLink: "https://meet.google.com/",
-      },
-    ];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const classes = await LiveClass.find({
+      date: { $gte: today },
+    }).sort({ time: 1 });
 
     res.json(classes);
-  } catch {
-    res.status(500).json({ message: "Error" });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching classes" });
   }
 };

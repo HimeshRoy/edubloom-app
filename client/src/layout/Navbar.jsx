@@ -43,10 +43,8 @@ export default function Navbar() {
             {/* DROPDOWN */}
             {showProfile && (
               <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg p-3 w-40">
-                <p className="text-sm mb-2">{user?.name}</p>
-                <p className="text-sm mb-2">ID : {user?.studentId}</p>
                 <p
-                  className="text-sm mb-2 cursor-pointer"
+                  className="text-m mb-2 cursor-pointer"
                   onClick={() => {
                     navigate("/profile");
                     setShowProfile(false);
@@ -54,7 +52,7 @@ export default function Navbar() {
                 >
                   My Profile
                 </p>
-                <button onClick={handleLogout} className="text-red-500 text-sm">
+                <button onClick={handleLogout} className="text-red-500 text-m">
                   Logout
                 </button>
               </div>

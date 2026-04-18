@@ -45,7 +45,7 @@ export default function ClassRoom() {
 
     try {
       const res = await API.post("/ai", {
-        question,
+        messages: [{ role: "user", content: question }],
       });
 
       console.log("AI RESPONSE 👉", res.data);
@@ -56,13 +56,16 @@ export default function ClassRoom() {
 
       setAiMessages((prev) => [
         ...prev,
-        { role: "ai", text: "AI failed 😅 try again" },
+        { role: "ai", text: "AI failed try again" },
       ]);
     } finally {
       setLoadingAI(false);
     }
   };
 
+  if (!state) {
+    return <div className="p-6">❌ No class data found. Go back.</div>;
+  }
   return (
     <div className="h-[calc(100vh-64px)] flex gap-4">
       {/* 🎥 VIDEO AREA */}
@@ -154,7 +157,7 @@ export default function ClassRoom() {
               value={aiInput}
               onChange={(e) => setAiInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") askAI();
+                if (e.key === "Enter") sendMessage();
               }}
               className="flex-1 border p-2 rounded-lg"
               placeholder="Ask your doubt..."
