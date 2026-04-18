@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import pdfParse from "pdf-parse";
+import pdfParse from "pdf-parse/lib/pdf-parse.js";
 
 export const askAI = async (req, res) => {
     try {
