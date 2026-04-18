@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import LiveClass from "./pages/LiveClass";
+import ClassRoom from "./pages/ClassRoom";
 
 import MainLayout from "./layout/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -27,6 +28,7 @@ function App() {
         {/* CHILD ROUTES */}
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="live" element={<LiveClass />} />
+        <Route path="live/:id" element={<ClassRoom />} />
       </Route>
 
     </Routes>
