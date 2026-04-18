@@ -25,4 +25,5 @@ export const askAI = async (req, res) => {
     console.log("AI ERROR 👉", err);
     res.status(500).json({ message: "AI error" });
   }
+  console.log("API KEY 👉", process.env.GEMINI_API_KEY);
 };
