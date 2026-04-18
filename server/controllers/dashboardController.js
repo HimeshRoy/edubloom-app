@@ -6,11 +6,6 @@ export const getDashboard = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
 
-    // 🔥 dynamic logic
-    const courses = Math.floor(Math.random() * 5) + 3;
-    const hours = Math.floor(Math.random() * 50) + 10;
-    const streak = Math.floor(Math.random() * 10) + 1;
-
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -18,26 +13,26 @@ export const getDashboard = async (req, res) => {
       date: { $gte: today },
     }).limit(3);
 
-    const analytics = [
-      { day: "Mon", hours: Math.random() * 3 },
-      { day: "Tue", hours: Math.random() * 3 },
-      { day: "Wed", hours: Math.random() * 3 },
-      { day: "Thu", hours: Math.random() * 3 },
-      { day: "Fri", hours: Math.random() * 3 },
-    ];
+    const subjects = ["Maths", "Physics", "Chemistry", "Biology"];
 
     res.json({
       name: user.name,
       studentId: user.studentId,
 
       stats: {
-        courses,
-        hours,
-        streak,
+        courses: subjects.length, // ✅ 4
+        hours: user.totalHours || 0,
+        streak: user.streak || 0,
       },
 
       todayClasses,
-      analytics,
+      analytics: [
+        { day: "Mon", hours: 0 },
+        { day: "Tue", hours: 0 },
+        { day: "Wed", hours: 0 },
+        { day: "Thu", hours: 0 },
+        { day: "Fri", hours: 0 },
+      ],
     });
 
   } catch (err) {
