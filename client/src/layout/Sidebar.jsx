@@ -1,35 +1,59 @@
-import { Link, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import {
+  FaHome,
+  FaVideo,
+  FaBook,
+  FaFileAlt,
+  FaClipboardList,
+  FaComments,
+  FaWhatsapp,
+} from "react-icons/fa";
 
 export default function Sidebar() {
-  const location = useLocation();
 
   const menu = [
-    { name: "Dashboard", path: "/dashboard" },
-    { name: "Live Classes", path: "/live" },
-    { name: "Lectures", path: "/lectures" },
-    { name: "Notes", path: "/notes" },
-    { name: "Profile", path: "/profile" },
+    { name: "Dashboard", path: "/dashboard", icon: <FaHome /> },
+    { name: "Live Classes", path: "/live", icon: <FaVideo /> },
+    { name: "Notes", path: "/notes", icon: <FaBook /> },
+    { name: "Lectures", path: "/lectures", icon: <FaFileAlt /> },
+    { name: "Tests", path: "/tests", icon: <FaClipboardList /> },
+    { name: "Messages", path: "/messages", icon: <FaComments /> },
   ];
 
   return (
-    <div className="w-64 h-screen bg-dark text-white p-5 fixed">
+    <div className="w-64 h-screen bg-indigo-900 text-white p-6 fixed flex flex-col">
+
+      {/* LOGO */}
       <h1 className="text-2xl font-bold mb-8">EduBloom</h1>
 
-      <div className="space-y-3">
+      {/* MENU */}
+      <div className="space-y-3 flex-1">
+
         {menu.map((item) => (
-          <Link
+          <NavLink
             key={item.path}
             to={item.path}
-            className={`block p-2 rounded-lg ${
-              location.pathname === item.path
-                ? "bg-primary"
-                : "hover:bg-gray-700"
-            }`}
+            className={({ isActive }) =>
+              `flex items-center gap-3 p-3 rounded-lg transition ${
+                isActive
+                  ? "bg-indigo-700"
+                  : "hover:bg-indigo-800"
+              }`
+            }
           >
-            {item.name}
-          </Link>
+            <span className="text-lg">{item.icon}</span>
+            <span>{item.name}</span>
+          </NavLink>
         ))}
+
       </div>
+
+      {/* WHATSAPP BUTTON (BOTTOM FIXED) */}
+      <button className="flex items-center justify-center gap-2 bg-lime-600 w-full p-3 rounded-lg text-sm hover:scale-105 transition">
+        <FaWhatsapp className="text-lg" />
+        Join WhatsApp
+      </button>
+
     </div>
   );
 }

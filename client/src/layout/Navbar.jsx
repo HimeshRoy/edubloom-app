@@ -1,24 +1,89 @@
-export default function Navbar() {
-  return (
-    <div className="h-16 bg-white shadow flex items-center justify-between px-6">
-      
-      <input
-        type="text"
-        placeholder="Search lectures, classes..."
-        className="border p-2 rounded w-1/3"
-      />
+import { useState } from "react";
+import { FaBell, FaUserCircle } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
-      <div className="flex items-center gap-4">
-        <button>🔔</button>
-        <div className="flex items-center gap-2">
-          <img
-            src="https://i.pravatar.cc/40"
-            alt=""
-            className="w-8 h-8 rounded-full"
+export default function Navbar() {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const [showNotif, setShowNotif] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/login";
+  };
+
+  return (
+    <>
+      {/* NAVBAR */}
+      <div className="h-16 backdrop-blur-lg bg-white/40 shadow flex items-center justify-between px-6">
+
+        {/* LEFT */}
+        <p className="text-sm font-medium">
+          🎓 {user?.name} | {user?.studentEmail}
+        </p>
+
+        {/* RIGHT */}
+        <div className="flex items-center gap-5">
+
+          {/* 🔔 NOTIFICATION */}
+          <FaBell
+            className="text-xl cursor-pointer hover:scale-110 transition"
+            onClick={() => setShowNotif(true)}
           />
-          <span>Student</span>
+
+          {/* 👤 PROFILE */}
+          <div className="relative">
+            <FaUserCircle
+              className="text-2xl cursor-pointer"
+              onClick={() => setShowProfile(!showProfile)}
+            />
+
+            {/* DROPDOWN */}
+            {showProfile && (
+              <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg p-3 w-40">
+                <p className="text-sm mb-2">{user?.name}</p>
+                <p className="text-sm mb-2">ID : {user?.studentId}</p>
+                <button
+                  onClick={handleLogout}
+                  className="text-red-500 text-sm"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+
         </div>
+
       </div>
-    </div>
+
+      {/* 🔔 NOTIFICATION PANEL */}
+      <AnimatePresence>
+        {showNotif && (
+          <>
+            {/* OVERLAY */}
+            <motion.div
+              className="fixed inset-0 bg-black/30 z-40"
+              onClick={() => setShowNotif(false)}
+            />
+
+            {/* PANEL */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              className="fixed right-0 top-0 w-80 h-full bg-white shadow-lg p-4 z-50"
+            >
+              <h2 className="font-semibold mb-4">Notifications</h2>
+
+              <p className="text-sm">📢 New class at 5 PM</p>
+              <p className="text-sm mt-2">📝 Test tomorrow</p>
+
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

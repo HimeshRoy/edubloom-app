@@ -5,7 +5,7 @@ import { generateStudent } from "../utils/generateId.js";
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, password, className } = req.body;
+    const { name, email, password, className, phone, state } = req.body;
 
     const existing = await User.findOne({ email });
     if (existing) {
@@ -19,6 +19,8 @@ export const signup = async (req, res) => {
     const user = await User.create({
       name,
       email,
+      phone, 
+      state,
       password: hashed,
       class: className,
       studentId,
