@@ -1,6 +1,7 @@
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 import { Outlet } from "react-router-dom";
+import AIChatbot from "../components/AIChatbot";
 
 export default function MainLayout() {
   return (
@@ -18,6 +19,7 @@ export default function MainLayout() {
         {/* PAGE CONTENT (DYNAMIC CHANGE) */}
         <div className="p-6">
           <Outlet />
+          <AIChatbot />
         </div>
 
       </div>

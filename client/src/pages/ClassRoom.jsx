@@ -1,9 +1,14 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import API from "../services/api";
+import { useRef, useEffect } from "react";
 
 export default function ClassRoom() {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const [aiInput, setAiInput] = useState("");
+  const [aiMessages, setAiMessages] = useState([]);
+  const [loadingAI, setLoadingAI] = useState(false);
 
   const [messages, setMessages] = useState([
     { sender: "Sir", text: "Welcome to class" },
@@ -13,7 +18,7 @@ export default function ClassRoom() {
   const sendMessage = () => {
     if (!input.trim()) return;
 
-    setMessages([...messages, { sender: "You", text: input }]);
+    setMessages((prev) => [...prev, { sender: "You", text: input }]);
     setInput("");
   };
 
@@ -21,15 +26,48 @@ export default function ClassRoom() {
     window.open(state?.meetLink, "_blank");
   };
 
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [aiMessages]);
+
+  const askAI = async () => {
+    if (!aiInput.trim()) return;
+
+    const question = aiInput;
+
+    // 👇 show user message instantly
+    setAiMessages((prev) => [...prev, { role: "user", text: question }]);
+
+    setAiInput("");
+    setLoadingAI(true);
+
+    try {
+      const res = await API.post("/ai", {
+        question,
+      });
+
+      console.log("AI RESPONSE 👉", res.data);
+
+      setAiMessages((prev) => [...prev, { role: "ai", text: res.data.answer }]);
+    } catch (err) {
+      console.log("AI ERROR 👉", err);
+
+      setAiMessages((prev) => [
+        ...prev,
+        { role: "ai", text: "AI failed 😅 try again" },
+      ]);
+    } finally {
+      setLoadingAI(false);
+    }
+  };
+
   return (
     <div className="h-[calc(100vh-64px)] flex gap-4">
-
       {/* 🎥 VIDEO AREA */}
       <div className="flex-1 bg-black rounded-2xl flex flex-col items-center justify-center text-white relative">
-
-        <h2 className="text-xl font-semibold mb-2">
-          🎥 {state?.subject}
-        </h2>
+        <h2 className="text-xl font-semibold mb-2">🎥 {state?.subject}</h2>
 
         <p className="text-gray-300 mb-6">
           {state?.teacher} | {state?.time}
@@ -46,21 +84,17 @@ export default function ClassRoom() {
 
         {/* 🎛 CONTROL BAR */}
         <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-4 bg-white/10 backdrop-blur-lg px-6 py-3 rounded-full">
-
           <button
             onClick={() => navigate("/live")}
             className="bg-red-500 text-white px-4 py-2 rounded-full"
           >
             Leave
           </button>
-
         </div>
-
       </div>
 
       {/* 💬 CHAT PANEL */}
       <div className="w-80 bg-white rounded-2xl shadow p-4 flex flex-col">
-
         <h2 className="font-semibold mb-3">💬 Chat</h2>
 
         <div className="flex-1 overflow-y-auto text-sm space-y-2">
@@ -88,21 +122,52 @@ export default function ClassRoom() {
         </div>
 
         {/* 🧠 AI PANEL */}
-        <div className="mt-4 border-t pt-3">
+        <div className="mt-4 border-t pt-3 flex flex-col h-64">
           <h3 className="font-semibold mb-2">🧠 AI Doubt Solver</h3>
 
-          <input
-            placeholder="Ask AI anything..."
-            className="w-full border p-2 rounded mb-2"
-          />
+          {/* CHAT AREA */}
+          <div className="flex-1 overflow-y-auto space-y-2 text-sm mb-2">
+            {aiMessages.map((msg, i) => (
+              <div
+                key={i}
+                className={`max-w-[80%] p-3 rounded-xl text-sm ${
+                  msg.role === "user"
+                    ? "bg-indigo-500 text-white ml-auto"
+                    : "bg-gray-200"
+                }`}
+              >
+                {msg.text}
+              </div>
+            ))}
 
-          <button className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-2 rounded-lg">
-            Ask AI
-          </button>
+            {loadingAI && (
+              <div className="text-gray-400 text-sm animate-pulse">
+                AI is typing...
+              </div>
+            )}
+            <div ref={bottomRef}></div>
+          </div>
+
+          {/* INPUT */}
+          <div className="flex gap-2">
+            <input
+              value={aiInput}
+              onChange={(e) => setAiInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") askAI();
+              }}
+              className="flex-1 border p-2 rounded-lg"
+              placeholder="Ask your doubt..."
+            />
+            <button
+              onClick={askAI}
+              className="bg-indigo-600 text-white px-4 rounded-lg"
+            >
+              Ask
+            </button>
+          </div>
         </div>
-
       </div>
-
     </div>
   );
 }
