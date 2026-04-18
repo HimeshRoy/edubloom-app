@@ -1,5 +1,8 @@
 import fetch from "node-fetch";
-import pdf from "pdf-parse";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+const pdfParse = require("pdf-parse");
 
 export const askAI = async (req, res) => {
     try {
@@ -82,12 +85,11 @@ export const askImageAI = async (req, res) => {
 
 export const askPDFAI = async (req, res) => {
   try {
-    const pdfParse = (await import("pdf-parse")).default;
     const pdfBuffer = req.file.buffer;
 
     const data = await pdfParse(pdfBuffer);
 
-    const text = data.text.slice(0, 5000); // limit (important ⚠️)
+    const text = data.text.slice(0, 5000);
 
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -108,8 +110,10 @@ export const askPDFAI = async (req, res) => {
 
     const result = await response.json();
 
+    console.log("PDF AI RESPONSE 👉", result); // debug
+
     res.json({
-      answer: result.choices[0].message.content,
+      answer: result.choices?.[0]?.message?.content || "No response",
     });
 
   } catch (err) {
