@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import pdfParse from "pdf-parse/lib/pdf-parse.js";
+import pdf from "pdf-parse";
 
 export const askAI = async (req, res) => {
     try {
@@ -82,6 +82,7 @@ export const askImageAI = async (req, res) => {
 
 export const askPDFAI = async (req, res) => {
   try {
+    const pdfParse = (await import("pdf-parse")).default;
     const pdfBuffer = req.file.buffer;
 
     const data = await pdfParse(pdfBuffer);
