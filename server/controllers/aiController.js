@@ -6,20 +6,23 @@ export const askAI = async (req, res) => {
   try {
     const { question } = req.body;
 
+    if (!question) {
+      return res.status(400).json({ message: "Question required" });
+    }
+
     const model = genAI.getGenerativeModel({
       model: "gemini-1.5-flash",
     });
 
-    const result = await model.generateContent(
-      `You are a CBSE Class 10 tutor. Explain clearly:\n${question}`
-    );
+    const result = await model.generateContent(question);
 
-    const response = result.response.text();
+    const response = await result.response;
+    const text = response.text();
 
-    res.json({ answer: response });
+    res.json({ answer: text });
 
   } catch (err) {
-    console.log(err);
+    console.log("AI ERROR 👉", err);
     res.status(500).json({ message: "AI error" });
   }
 };
