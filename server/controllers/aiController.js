@@ -6,12 +6,8 @@ export const askAI = async (req, res) => {
   try {
     const { question } = req.body;
 
-    if (!question) {
-      return res.status(400).json({ message: "Question required" });
-    }
-
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-1.5-flash-latest",
     });
 
     const result = await model.generateContent(question);
@@ -25,5 +21,4 @@ export const askAI = async (req, res) => {
     console.log("AI ERROR 👉", err);
     res.status(500).json({ message: "AI error" });
   }
-  console.log("API KEY 👉", process.env.GEMINI_API_KEY);
 };
