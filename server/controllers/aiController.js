@@ -11,7 +11,7 @@ export const askAI = async (req, res) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                model: "mistralai/mistral-7b-instruct",
+                model: "meta-llama/llama-3.3-70b-instruct",
                 messages: [
                     { role: "user", content: question }
                 ]
