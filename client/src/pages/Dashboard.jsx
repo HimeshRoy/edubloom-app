@@ -8,10 +8,12 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDashboard();
@@ -35,7 +37,7 @@ export default function Dashboard() {
       {/* HEADER */}
       <div>
         <h1 className="text-3xl font-bold">Welcome back, {data.name} 👋</h1>
-        <p className="text-gray-500 text-sm">Keep learning</p>
+        <p className="text-gray-500 text-sm">{data.message}</p>
       </div>
 
       {/* STATS */}
@@ -61,15 +63,33 @@ export default function Dashboard() {
         <div className="bg-white p-6 rounded-2xl shadow-md">
           <h2 className="font-semibold mb-4">📅 Today’s Classes</h2>
 
-          {data.todayClasses.map((cls, i) => (
-            <div
-              key={i}
-              className="flex justify-between p-3 bg-gray-100 rounded-lg mb-2"
-            >
-              <span>{cls.subject}</span>
-              <span className="text-sm text-gray-600">{cls.time}</span>
+          {data.todayClasses.length === 0 ? (
+            <div className="text-gray-500 text-center py-10">
+              😴 No classes scheduled today
             </div>
-          ))}
+          ) : (
+            data.todayClasses.map((cls, i) => (
+              <div
+                key={cls._id || i}
+                className="flex justify-between p-3 bg-gray-100 rounded-lg mb-2"
+              >
+                <span
+                  className={`px-2 py-1 text-xs rounded-full font-medium ${
+                    cls.subject === "Maths"
+                      ? "bg-blue-100 text-blue-600"
+                      : cls.subject === "Physics"
+                        ? "bg-purple-100 text-purple-600"
+                        : cls.subject === "Chemistry"
+                          ? "bg-green-100 text-green-600"
+                          : "bg-pink-100 text-pink-600"
+                  }`}
+                >
+                  {cls.subject}
+                </span>
+                <span className="text-sm text-gray-600">{cls.time}</span>
+              </div>
+            ))
+          )}
         </div>
 
         {/* ANALYTICS */}
@@ -96,14 +116,20 @@ export default function Dashboard() {
 
       {/* QUICK ACTIONS */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {["Notes", "Lectures", "Tests", "Messages"].map((item) => (
-          <button
-            key={item}
-            className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 rounded-xl hover:scale-105 hover:shadow-xl transition duration-300"
-          >
-            {item}
-          </button>
-        ))}
+       {[
+  { name: "Notes", path: "/notes" },
+  { name: "Lectures", path: "/lectures" },
+  { name: "Tests", path: "/tests" },
+  { name: "Messages", path: "/messages" },
+].map((item) => (
+  <button
+    key={item.name}
+    onClick={() => navigate(item.path)}
+    className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 rounded-xl hover:scale-105 hover:shadow-xl transition duration-300"
+  >
+    {item.name}
+  </button>
+))}
       </div>
     </div>
   );

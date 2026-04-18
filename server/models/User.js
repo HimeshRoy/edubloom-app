@@ -52,6 +52,19 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    totalHours: {
+        type: Number,
+        default: 0,
+    },
+
+    streak: {
+        type: Number,
+        default: 0,
+    },
+
+    lastActiveDate: {
+        type: Date,
+    },
 });
 
 export default mongoose.model("User", userSchema);

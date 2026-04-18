@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import LiveClass from "../models/LiveClass.js";
-
+import StudyLog from "../models/StudyLog.js";
 
 export const getDashboard = async (req, res) => {
   try {
@@ -15,6 +15,36 @@ export const getDashboard = async (req, res) => {
 
     const subjects = ["Maths", "Physics", "Chemistry", "Biology"];
 
+    let message = "Keep learning 💪";
+
+    if (todayClasses.length === 0) {
+      message = "No classes today 😴 revise something!";
+    } else if ((user.streak || 0) >= 5) {
+      message = "On fire 🔥 keep the streak going!";
+    }
+
+    const logs = await StudyLog.find({ userId: req.user.id });
+
+    const analytics = [
+      { day: "Mon", hours: 0 },
+      { day: "Tue", hours: 0 },
+      { day: "Wed", hours: 0 },
+      { day: "Thu", hours: 0 },
+      { day: "Fri", hours: 0 },
+    ];
+
+    logs.forEach((log) => {
+      const day = new Date(log.date).toLocaleString("en-US", {
+        weekday: "short",
+      });
+
+      const found = analytics.find((a) => a.day === day);
+
+      if (found) {
+        found.hours += log.duration;
+      }
+    });
+
     res.json({
       name: user.name,
       studentId: user.studentId,
@@ -26,13 +56,8 @@ export const getDashboard = async (req, res) => {
       },
 
       todayClasses,
-      analytics: [
-        { day: "Mon", hours: 0 },
-        { day: "Tue", hours: 0 },
-        { day: "Wed", hours: 0 },
-        { day: "Thu", hours: 0 },
-        { day: "Fri", hours: 0 },
-      ],
+      analytics,
+      message,
     });
 
   } catch (err) {

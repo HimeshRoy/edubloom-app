@@ -24,6 +24,10 @@ export default function ClassRoom() {
 
   const joinMeet = () => {
     window.open(state?.meetLink, "_blank");
+    await API.post("/study-log", {
+  subject: state.subject,
+  duration: 1, // 1 hour (you can improve later)
+});
   };
 
   const bottomRef = useRef(null);
