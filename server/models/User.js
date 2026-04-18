@@ -1,16 +1,52 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    password: String,
-    phone: String,
-    state: String,
-    studentId: String,
-    
-    studentEmail: String,
+    name: {
+        type: String,
+        required: true,
+        trim: true,
+    },
 
-    class: String,
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+    },
+
+    password: {
+        type: String,
+        required: true,
+    },
+
+    phone: {
+        type: String,
+        default: "",
+    },
+
+    state: {
+        type: String,
+        default: "",
+    },
+
+    studentId: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+
+    studentEmail: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+
+    class: {
+        type: String,
+        default: "10",
+        enum: ["10"],
+    },
 
     createdAt: {
         type: Date,

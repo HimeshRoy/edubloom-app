@@ -4,6 +4,7 @@ import connectDB from "./config/db.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import liveClassRoutes from "./routes/liveClassRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 
 dotenv.config();
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 5000;
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/live-classes", liveClassRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

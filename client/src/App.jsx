@@ -4,6 +4,7 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import LiveClass from "./pages/LiveClass";
 import ClassRoom from "./pages/ClassRoom";
+import Profile from "./pages/Profile";
 
 import MainLayout from "./layout/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -29,6 +30,7 @@ function App() {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="live" element={<LiveClass />} />
         <Route path="live/:id" element={<ClassRoom />} />
+        <Route path="profile" element={<Profile />} />
       </Route>
 
     </Routes>

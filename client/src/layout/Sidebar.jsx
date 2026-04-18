@@ -7,6 +7,7 @@ import {
   FaClipboardList,
   FaComments,
   FaWhatsapp,
+  FaUserCircle,
 } from "react-icons/fa";
 
 export default function Sidebar() {
@@ -18,6 +19,7 @@ export default function Sidebar() {
     { name: "Lectures", path: "/lectures", icon: <FaFileAlt /> },
     { name: "Tests", path: "/tests", icon: <FaClipboardList /> },
     { name: "Messages", path: "/messages", icon: <FaComments /> },
+    { name: "Profile", path: "/profile", icon: <FaUserCircle /> },
   ];
 
   return (

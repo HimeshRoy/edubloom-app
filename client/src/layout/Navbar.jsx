@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { FaBell, FaUserCircle } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const [showNotif, setShowNotif] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.clear();
@@ -17,7 +20,6 @@ export default function Navbar() {
     <>
       {/* NAVBAR */}
       <div className="h-16 backdrop-blur-lg bg-white/40 shadow flex items-center justify-between px-6">
-
         {/* LEFT */}
         <p className="text-sm font-medium">
           🎓 {user?.name} | {user?.studentEmail}
@@ -25,7 +27,6 @@ export default function Navbar() {
 
         {/* RIGHT */}
         <div className="flex items-center gap-5">
-
           {/* 🔔 NOTIFICATION */}
           <FaBell
             className="text-xl cursor-pointer hover:scale-110 transition"
@@ -44,18 +45,22 @@ export default function Navbar() {
               <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg p-3 w-40">
                 <p className="text-sm mb-2">{user?.name}</p>
                 <p className="text-sm mb-2">ID : {user?.studentId}</p>
-                <button
-                  onClick={handleLogout}
-                  className="text-red-500 text-sm"
+                <p
+                  className="text-sm mb-2 cursor-pointer"
+                  onClick={() => {
+                    navigate("/profile");
+                    setShowProfile(false);
+                  }}
                 >
+                  My Profile
+                </p>
+                <button onClick={handleLogout} className="text-red-500 text-sm">
                   Logout
                 </button>
               </div>
             )}
           </div>
-
         </div>
-
       </div>
 
       {/* 🔔 NOTIFICATION PANEL */}
@@ -79,7 +84,6 @@ export default function Navbar() {
 
               <p className="text-sm">📢 New class at 5 PM</p>
               <p className="text-sm mt-2">📝 Test tomorrow</p>
-
             </motion.div>
           </>
         )}
