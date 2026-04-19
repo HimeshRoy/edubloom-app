@@ -19,7 +19,7 @@ export const signup = async (req, res) => {
     const user = await User.create({
       name,
       email,
-      phone, 
+      phone,
       state,
       password: hashed,
       class: className,
@@ -50,5 +50,8 @@ export const login = async (req, res) => {
 
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-  res.json({ token, user });
+  res.json({
+    token,
+    role: user.role, // 🔥 important
+  });
 };

@@ -65,6 +65,11 @@ const userSchema = new mongoose.Schema({
     lastActiveDate: {
         type: Date,
     },
+    role: {
+        type: String,
+        enum: ["student", "admin"],
+        default: "student",
+    },
 });
 
 export default mongoose.model("User", userSchema);

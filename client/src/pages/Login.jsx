@@ -20,43 +20,41 @@ export default function Login() {
 
       const res = await API.post("/auth/login", form);
 
-      // 🔐 SAVE TOKEN
+      // 🔐 SAVE DATA
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.role);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       toast.success("Welcome back");
 
+      // 🔥 ROLE BASED REDIRECT
       setTimeout(() => {
-        navigate("/dashboard");
-      }, 1500);
-
+        if (res.data.role === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/dashboard");
+        }
+      }, 1000);
     } catch (err) {
       toast.error(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600">
-
       <div className="w-[900px] bg-white rounded-3xl shadow-2xl flex overflow-hidden">
-
         {/* LEFT */}
         <div className="w-1/2 p-10">
-
           <h2 className="text-2xl font-bold mb-6">Welcome Back 👋</h2>
 
           <div className="space-y-4">
-
             <div className="flex items-center bg-gray-100 p-3 rounded-full">
               <FaEnvelope className="text-purple-500 mr-3" />
               <input
                 placeholder="Email"
                 className="bg-transparent outline-none w-full"
-                onChange={(e) =>
-                  setForm({ ...form, email: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
             </div>
 
@@ -66,12 +64,9 @@ export default function Login() {
                 type="password"
                 placeholder="Password"
                 className="bg-transparent outline-none w-full"
-                onChange={(e) =>
-                  setForm({ ...form, password: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
             </div>
-
           </div>
 
           <button
@@ -90,7 +85,6 @@ export default function Login() {
               Create account
             </span>
           </p>
-
         </div>
 
         {/* RIGHT */}
@@ -102,9 +96,7 @@ export default function Login() {
             </p>
           </div>
         </div>
-
       </div>
-
     </div>
   );
 }
