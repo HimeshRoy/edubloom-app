@@ -5,9 +5,11 @@ import Dashboard from "./pages/Dashboard";
 import LiveClass from "./pages/LiveClass";
 import ClassRoom from "./pages/ClassRoom";
 import Profile from "./pages/Profile";
-
 import MainLayout from "./layout/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Lectures from "./pages/Lectures";
+import Notes from "./pages/Notes";
+import Messages from "./pages/Messages";
 
 function App() {
   return (
@@ -31,6 +33,9 @@ function App() {
         <Route path="live" element={<LiveClass />} />
         <Route path="live/:id" element={<ClassRoom />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="lectures" element={<Lectures />} />
+        <Route path="notes" element={<Notes />} />
+        <Route path="messages" element={<Messages />} />
       </Route>
 
     </Routes>
