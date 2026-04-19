@@ -19,6 +19,8 @@ import AdminLayout from "./layout/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminStudents from "./pages/AdminStudents";
 import AdminStudentDetail from "./pages/AdminStudentDetail";
+import AdminLectures from "./pages/AdminLectures";
+
 
 function App() {
   return (
@@ -58,6 +60,7 @@ function App() {
         <Route index element={<AdminDashboard />} />
         <Route path="students" element={<AdminStudents />} />
         <Route path="student/:id" element={<AdminStudentDetail />} />
+        <Route path="/admin/lectures" element={<AdminLectures />} />
       </Route>
 
     </Routes>

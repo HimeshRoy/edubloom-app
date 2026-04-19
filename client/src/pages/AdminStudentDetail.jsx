@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function AdminStudentDetail() {
   const { id } = useParams();
@@ -56,7 +57,7 @@ export default function AdminStudentDetail() {
     try {
       await API.delete(`/admin/students/${id}`);
 
-      alert("Deleted successfully");
+      toast.success("Deleted successfully");
 
       window.location.href = "/admin/students";
     } catch (err) {
@@ -68,7 +69,7 @@ export default function AdminStudentDetail() {
     try {
       await API.put(`/admin/students/${id}`, form);
 
-      alert("Updated");
+      toast.success("Updated");
 
       setEditMode(false);
 
