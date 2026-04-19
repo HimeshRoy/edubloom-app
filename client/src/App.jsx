@@ -23,6 +23,7 @@ import AdminLectures from "./pages/AdminLectures";
 import AdminNotes from "./pages/AdminNotes";
 import AdminClasses from "./pages/AdminClasses";
 import AdminMessages from "./pages/AdminMessages";
+import Chat from "./pages/Chat";
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
         <Route path="lectures" element={<Lectures />} />
         <Route path="notes" element={<Notes />} />
         <Route path="messages" element={<Messages />} />
+        <Route path="chat" element={<Chat />} />
       </Route>
 
       {/* 👑 ADMIN */}
@@ -67,6 +69,7 @@ function App() {
         <Route path="/admin/notes" element={<AdminNotes />} />
         <Route path="/admin/classes" element={<AdminClasses />} />
         <Route path="/admin/messages" element={<AdminMessages />} />
+        <Route path="/admin/chat" element={<Chat />} />
       </Route>
 
     </Routes>

@@ -51,6 +51,13 @@ export default function AdminLayout() {
           >
             💬 Messages
           </Link>
+
+          <Link
+            className="hover:bg-white/10 p-2 rounded-lg"
+            to="/admin/chat"
+          >
+            💬 chat
+          </Link>
         </nav>
       </div>
 

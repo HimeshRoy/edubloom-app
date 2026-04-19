@@ -39,6 +39,15 @@ app.set("io", io);
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
+  // 👇 ADD THIS
+  socket.on("typing", (userId) => {
+    socket.broadcast.emit("user_typing", userId);
+  });
+
+  socket.on("stop_typing", () => {
+    socket.broadcast.emit("stop_typing");
+  });
+
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
@@ -70,6 +79,24 @@ const createAdmin = async () => {
 };
 
 createAdmin();
+
+let onlineUsers = {};
+
+io.on("connection", (socket) => {
+  socket.on("join", (userId) => {
+    onlineUsers[userId] = socket.id;
+    io.emit("online_users", Object.keys(onlineUsers));
+  });
+
+  socket.on("disconnect", () => {
+    for (let user in onlineUsers) {
+      if (onlineUsers[user] === socket.id) {
+        delete onlineUsers[user];
+      }
+    }
+    io.emit("online_users", Object.keys(onlineUsers));
+  });
+});
 
 // 🔥 ROUTES
 app.use("/api/dashboard", dashboardRoutes);

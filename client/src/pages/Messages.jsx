@@ -1,16 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import API from "../services/api";
 import { io } from "socket.io-client";
-import { useRef } from "react";
 
 export default function Messages() {
   const [messages, setMessages] = useState([]);
   const socketRef = useRef(null);
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  // 🔥 SOCKET
   useEffect(() => {
     socketRef.current = io("https://edubloom-app.onrender.com");
 
     socketRef.current.on("new_message", (msg) => {
+      // ✅ only announcements
+      if (!msg.isAnnouncement) return;
+
       setMessages((prev) => {
         const exists = prev.find((m) => m._id === msg._id);
         if (exists) return prev;
@@ -18,28 +23,25 @@ export default function Messages() {
       });
     });
 
-    return () => {
-      socketRef.current.disconnect();
-    };
+    return () => socketRef.current.disconnect();
   }, []);
 
+  // 🔥 FETCH
   useEffect(() => {
     fetchMessages();
   }, []);
 
   const fetchMessages = async () => {
-    const res = await API.get("/messages");
+    const res = await API.get("/messages/announcements");
     setMessages(res.data);
   };
 
-  const user = JSON.parse(localStorage.getItem("user"));
-
+  // 🔥 UNREAD COUNT
   const unreadCount = messages.filter(
-    (msg) =>
-      (!msg.userId || msg.userId === user._id) &&
-      !msg.readBy?.includes(user._id),
+    (msg) => !msg.readBy?.includes(user._id)
   ).length;
 
+  // 🔥 MARK READ
   const openMessage = async (id) => {
     await API.put(`/messages/read/${id}`);
 
@@ -50,8 +52,8 @@ export default function Messages() {
               ...msg,
               readBy: [...(msg.readBy || []), user._id],
             }
-          : msg,
-      ),
+          : msg
+      )
     );
   };
 
@@ -66,24 +68,25 @@ export default function Messages() {
         )}
       </h1>
 
-      {messages.length === 0 && <p>No messages</p>}
+      {messages.length === 0 && <p>No announcements</p>}
 
       {messages.map((msg) => (
         <div
           key={msg._id}
-          className="bg-white p-4 rounded-xl shadow"
           onClick={() => openMessage(msg._id)}
+          className="bg-white p-4 rounded-xl shadow cursor-pointer hover:scale-[1.01] transition"
         >
-          <p className="text-xs text-gray-500">
-            {msg.userId ? "Private" : "Broadcast"}
-          </p>
-          <p>{msg.text}</p>
+          <p className="text-xs text-gray-500">📢 Announcement</p>
+
+          <p className="font-medium">{msg.text}</p>
+
           <span className="text-xs text-gray-400">
             {new Date(msg.createdAt).toLocaleString()}
           </span>
-          {msg.role === "admin" && (
-            <span>{msg.readBy?.includes(user._id) ? "✔✔ Seen" : "✔ Sent"}</span>
-          )}
+
+          <div className="text-xs mt-1 text-gray-400">
+            {msg.readBy?.includes(user._id) ? "✔✔ Seen" : "✔ New"}
+          </div>
         </div>
       ))}
     </div>

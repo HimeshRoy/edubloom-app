@@ -4,24 +4,16 @@ import toast from "react-hot-toast";
 
 export default function AdminMessages() {
   const [text, setText] = useState("");
-  const [students, setStudents] = useState([]);
   const [messages, setMessages] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("");
   const [editId, setEditId] = useState(null);
 
   useEffect(() => {
     fetchMessages();
-    fetchStudents();
   }, []);
 
   const fetchMessages = async () => {
-    const res = await API.get("/messages");
+    const res = await API.get("/messages/announcements");
     setMessages(res.data);
-  };
-
-  const fetchStudents = async () => {
-    const res = await API.get("/admin/students");
-    setStudents(res.data);
   };
 
   const handleEdit = (msg) => {
@@ -45,21 +37,21 @@ export default function AdminMessages() {
     } else {
       await API.post("/messages", {
         text,
-        userId: selectedUser || null,
+        isAnnouncement: true,
       });
     }
 
     setText("");
-    setSelectedUser("");
     fetchMessages();
 
-    toast.success("Message sent");
+    toast.success("Announcement sent 😏");
   };
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">💬 Admin Messages</h1>
+      <h1 className="text-2xl font-bold">📢 Admin Announcements</h1>
 
+      {/* INPUT */}
       <div className="bg-white p-6 rounded-2xl shadow space-y-3">
         <textarea
           placeholder="Write announcement..."
@@ -68,30 +60,17 @@ export default function AdminMessages() {
           className="border p-3 w-full rounded"
         />
 
-        <select
-          value={selectedUser}
-          onChange={(e) => setSelectedUser(e.target.value)}
-          className="border p-2 w-full rounded"
-        >
-          <option value="">Broadcast (All)</option>
-          {students.map((s) => (
-            <option key={s._id} value={s._id}>
-              {s.name} - {s.studentId}
-            </option>
-          ))}
-        </select>
-
         <button
-          onClick={send} 
+          onClick={send}
           className="bg-purple-600 text-white px-4 py-2 rounded"
         >
-           {editId ? "Update Message" : "Send Message"}
-
+          {editId ? "Update" : "Send"}
         </button>
       </div>
 
+      {/* LIST */}
       <div className="bg-white p-6 rounded-2xl shadow space-y-3">
-        <h2 className="font-semibold">Sent Messages</h2>
+        <h2 className="font-semibold">All Announcements</h2>
 
         {messages.map((msg) => (
           <div
@@ -101,7 +80,7 @@ export default function AdminMessages() {
             <div>
               <p className="font-semibold">{msg.text}</p>
               <p className="text-xs text-gray-500">
-                {msg.userId ? "Private" : "Broadcast"}
+                📢 Announcement
               </p>
             </div>
 

@@ -4,7 +4,8 @@ import admin from "../middleware/adminMiddleware.js";
 
 import {
   sendMessage,
-  getMessages,
+  getChat,
+  getAnnouncements, // 👈 ADD
   updateMessage,
   deleteMessage,
   markAsRead,
@@ -12,12 +13,18 @@ import {
 
 const router = express.Router();
 
-router.post("/", auth, admin, sendMessage);
-router.get("/", auth, getMessages);
+// send (chat + announcement)
+router.post("/", auth, sendMessage);
 
+// chat
+router.get("/chat/:userId", auth, getChat);
+
+// announcements
+router.get("/announcements", auth, getAnnouncements);
+
+// CRUD
 router.put("/:id", auth, admin, updateMessage);
 router.delete("/:id", auth, admin, deleteMessage);
-
 router.put("/read/:id", auth, markAsRead);
 
 export default router;

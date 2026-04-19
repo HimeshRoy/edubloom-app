@@ -6,10 +6,21 @@ const messageSchema = new mongoose.Schema({
     required: true,
   },
 
-  userId: {
+  senderId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    default: null, // null = broadcast
+    required: true,
+  },
+
+  receiverId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null, // 👈 null = announcement
+  },
+
+  isAnnouncement: {
+    type: Boolean,
+    default: false,
   },
 
   readBy: [
@@ -18,12 +29,6 @@ const messageSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
-
-  role: {
-    type: String,
-    enum: ["admin", "student"],
-    default: "admin",
-  },
 
   createdAt: {
     type: Date,

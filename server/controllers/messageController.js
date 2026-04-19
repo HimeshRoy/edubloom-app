@@ -3,14 +3,17 @@ import Message from "../models/Message.js";
 // 📤 CREATE
 export const sendMessage = async (req, res) => {
   try {
-    const { text, userId } = req.body;
+    const { text, receiverId, isAnnouncement } = req.body;
+
+    const senderId = req.user.id;
 
     const msg = await Message.create({
       text,
-      userId: userId || null,
+      senderId,
+      receiverId: receiverId || null,
+      isAnnouncement: isAnnouncement || false,
     });
 
-    // 🔥 REALTIME EMIT
     req.app.get("io").emit("new_message", msg);
 
     res.json(msg);
@@ -19,14 +22,31 @@ export const sendMessage = async (req, res) => {
   }
 };
 
-// 📥 GET
-export const getMessages = async (req, res) => {
+// getAnnouncements
+export const getAnnouncements = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const messages = await Message.find({
+      isAnnouncement: true,
+    }).sort({ createdAt: -1 });
+
+    res.json(messages);
+  } catch (err) {
+    res.status(500).json({ message: "Fetch failed" });
+  }
+};
+
+// 📥 GET
+export const getChat = async (req, res) => {
+  try {
+    const me = req.user.id;
+    const other = req.params.userId;
 
     const messages = await Message.find({
-      $or: [{ userId: null }, { userId }],
-    }).sort({ createdAt: -1 });
+      $or: [
+        { senderId: me, receiverId: other },
+        { senderId: other, receiverId: me },
+      ],
+    }).sort({ createdAt: 1 });
 
     res.json(messages);
   } catch (err) {

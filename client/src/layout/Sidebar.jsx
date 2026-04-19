@@ -8,6 +8,7 @@ import {
   FaComments,
   FaWhatsapp,
   FaUserCircle,
+  FaMicrophone,
 } from "react-icons/fa";
 
 export default function Sidebar() {
@@ -18,8 +19,9 @@ export default function Sidebar() {
     { name: "Notes", path: "/notes", icon: <FaBook /> },
     { name: "Lectures", path: "/lectures", icon: <FaFileAlt /> },
     { name: "Tests", path: "/tests", icon: <FaClipboardList /> },
-    { name: "Messages", path: "/messages", icon: <FaComments /> },
+    { name: "Messages", path: "/messages", icon: <FaMicrophone /> },
     { name: "Profile", path: "/profile", icon: <FaUserCircle /> },
+    { name: "Chat", path: "/chat", icon: <FaComments /> },
   ];
 
   return (
