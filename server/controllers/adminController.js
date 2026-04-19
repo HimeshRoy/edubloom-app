@@ -91,7 +91,7 @@ export const updateStudent = async (req, res) => {
     const updated = await User.findByIdAndUpdate(
       req.params.id,
       { name, phone, state },
-      { new: true }
+      { returnDocument: "after" }
     );
 
     res.json(updated);
