@@ -53,6 +53,20 @@ export default function LiveClass() {
     return `${hour}:${m} ${ampm}`;
   };
 
+  const isLiveNow = (cls) => {
+    const now = new Date();
+
+    const classDate = new Date(cls.date);
+
+    const [h, m] = cls.time.split(":");
+
+    classDate.setHours(h, m, 0);
+
+    const diff = (now - classDate) / 60000; // minutes
+
+    return diff >= 0 && diff <= 60; // 1 hour window
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">🎥 Live Classes</h1>
@@ -80,12 +94,22 @@ export default function LiveClass() {
             <p className="text-sm opacity-80">👨‍🏫 {cls.teacher}</p>
 
             <p className="text-sm mb-4 opacity-80">🕒{formatTime(cls.time)}</p>
+            {isLiveNow(cls) && (
+              <span className="bg-red-500 px-2 py-1 text-xs rounded-full ml-2">
+                🔴 LIVE
+              </span>
+            )}
 
             <button
               onClick={() => joinClass(cls)}
-              className="w-full bg-white text-black p-2 rounded-lg hover:scale-105 transition"
+              disabled={!isLiveNow(cls)}
+              className={`w-full p-2 rounded-lg transition ${
+                isLiveNow(cls)
+                  ? "bg-white text-black hover:scale-105"
+                  : "bg-gray-300 text-gray-600 cursor-not-allowed"
+              }`}
             >
-              🚀 Join Class
+              {isLiveNow(cls) ? "🚀 Join Now" : "Not Started"}
             </button>
           </div>
         ))}

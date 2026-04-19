@@ -22,6 +22,7 @@ import AdminStudentDetail from "./pages/AdminStudentDetail";
 import AdminLectures from "./pages/AdminLectures";
 import AdminNotes from "./pages/AdminNotes";
 import AdminClasses from "./pages/AdminClasses";
+import AdminMessages from "./pages/AdminMessages";
 
 
 function App() {
@@ -65,6 +66,7 @@ function App() {
         <Route path="/admin/lectures" element={<AdminLectures />} />
         <Route path="/admin/notes" element={<AdminNotes />} />
         <Route path="/admin/classes" element={<AdminClasses />} />
+        <Route path="/admin/messages" element={<AdminMessages />} />
       </Route>
 
     </Routes>

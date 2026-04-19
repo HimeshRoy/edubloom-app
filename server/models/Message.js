@@ -1,19 +1,29 @@
 import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema({
+  text: {
+    type: String,
+    required: true,
+  },
+
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    default: null, // null = broadcast
   },
 
-  question: String,
+  readBy: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 
-  answer: {
+  role: {
     type: String,
-    default: "",
+    enum: ["admin", "student"],
+    default: "admin",
   },
-
-  subject: String,
 
   createdAt: {
     type: Date,

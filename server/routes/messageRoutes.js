@@ -1,13 +1,23 @@
 import express from "express";
+import auth from "../middleware/authMiddleware.js";
+import admin from "../middleware/adminMiddleware.js";
+
 import {
-  getMessages,
   sendMessage,
+  getMessages,
+  updateMessage,
+  deleteMessage,
+  markAsRead,
 } from "../controllers/messageController.js";
-import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.get("/", authMiddleware, getMessages);
-router.post("/", authMiddleware, sendMessage);
+router.post("/", auth, admin, sendMessage);
+router.get("/", auth, getMessages);
+
+router.put("/:id", auth, admin, updateMessage);
+router.delete("/:id", auth, admin, deleteMessage);
+
+router.put("/read/:id", auth, markAsRead);
 
 export default router;
