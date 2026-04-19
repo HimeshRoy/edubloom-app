@@ -19,7 +19,7 @@ export default function Login() {
       setLoading(true);
 
       const res = await API.post("/auth/login", form);
-      console.log("LOGIN RESPONSE 👉", res.data);
+      // console.log("LOGIN RESPONSE 👉", res.data);
       // 🔐 SAVE DATA
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
