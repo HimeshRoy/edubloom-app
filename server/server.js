@@ -34,8 +34,7 @@ const createAdmin = async () => {
       password: hashed,
       role: "admin",
       studentId: "ADMIN001",
-      studentEmail: "admin@edubloom",
-      class: "admin",
+      studentEmail: "admin@edu",
     });
 
     console.log("✅ Admin created");

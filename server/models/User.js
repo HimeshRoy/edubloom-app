@@ -44,8 +44,10 @@ const userSchema = new mongoose.Schema({
 
     class: {
         type: String,
-        default: "10",
         enum: ["10"],
+        required: function () {
+            return this.role === "student";
+        },
     },
 
     createdAt: {
