@@ -7,21 +7,12 @@ import {
   getAllClasses,
   updateClass,
   deleteClass,
+  getLiveClasses,
 } from "../controllers/liveClassController.js";
 
 const router = express.Router();
 
-// 👨‍🎓 student
-router.get("/", auth, async (req, res) => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const classes = await LiveClass.find({
-    date: { $gte: today },
-  }).sort({ date: 1 });
-
-  res.json(classes);
-});
+router.get("/", auth, getLiveClasses);
 
 // 👑 admin
 router.post("/", auth, admin, createClass);

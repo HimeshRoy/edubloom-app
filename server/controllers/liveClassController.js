@@ -3,10 +3,11 @@ import LiveClass from "../models/LiveClass.js";
 // 👨‍🎓 STUDENT VIEW
 export const getLiveClasses = async (req, res) => {
   try {
-    const now = new Date();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     const classes = await LiveClass.find({
-      date: { $gte: now },
+      date: { $gte: today },
     }).sort({ date: 1 });
 
     res.json(classes);
