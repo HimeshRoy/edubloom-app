@@ -5,8 +5,6 @@ import LiveClass from "../models/LiveClass.js";
 import Lecture from "../models/Lecture.js";
 import Note from "../models/Note.js";
 
-import User from "../models/User.js";
-
 export const getAllStudents = async (req, res) => {
   try {
     const students = await User.find({ role: "student" })

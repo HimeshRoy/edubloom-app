@@ -13,7 +13,7 @@ export default function (req, res, next) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     req.user = decoded;
-    console.log("DECODED 👉", decoded); // need to delete 
+    // console.log("DECODED 👉", decoded);
 
     next();
   } catch (err) {
