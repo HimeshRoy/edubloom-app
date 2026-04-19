@@ -25,36 +25,36 @@ export default function AdminMessages() {
   };
 
   const handleEdit = (msg) => {
-  setText(msg.text);
-  setEditId(msg._id);
-};
+    setText(msg.text);
+    setEditId(msg._id);
+  };
 
-const handleDelete = async (id) => {
-  if (!window.confirm("Delete message?")) return;
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete message?")) return;
 
-  await API.delete(`/messages/${id}`);
-  fetchMessages();
-};
+    await API.delete(`/messages/${id}`);
+    fetchMessages();
+  };
 
-const send = async () => {
-  if (!text.trim()) return;
+  const send = async () => {
+    if (!text.trim()) return;
 
-  if (editId) {
-    await API.put(`/messages/${editId}`, { text });
-    setEditId(null);
-  } else {
-    await API.post("/messages", {
-      text,
-      userId: selectedUser || null,
-    });
-  }
+    if (editId) {
+      await API.put(`/messages/${editId}`, { text });
+      setEditId(null);
+    } else {
+      await API.post("/messages", {
+        text,
+        userId: selectedUser || null,
+      });
+    }
 
-  setText("");
-  setSelectedUser("");
-  fetchMessages();
+    setText("");
+    setSelectedUser("");
+    fetchMessages();
 
-  toast.success("Message sent");
-};
+    toast.success("Message sent");
+  };
 
   return (
     <div className="space-y-6">
@@ -82,10 +82,11 @@ const send = async () => {
         </select>
 
         <button
-          onClick={send}
+          onClick={send} 
           className="bg-purple-600 text-white px-4 py-2 rounded"
         >
-          Send Message
+           {editId ? "Update Message" : "Send Message"}
+
         </button>
       </div>
 
@@ -97,7 +98,12 @@ const send = async () => {
             key={msg._id}
             className="flex justify-between items-center bg-gray-100 p-3 rounded"
           >
-            <p>{msg.text}</p>
+            <div>
+              <p className="font-semibold">{msg.text}</p>
+              <p className="text-xs text-gray-500">
+                {msg.userId ? "Private" : "Broadcast"}
+              </p>
+            </div>
 
             <div className="flex gap-2">
               <button

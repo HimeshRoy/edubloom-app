@@ -10,6 +10,9 @@ export const sendMessage = async (req, res) => {
       userId: userId || null,
     });
 
+    // 🔥 REALTIME EMIT
+    req.app.get("io").emit("new_message", msg);
+
     res.json(msg);
   } catch (err) {
     res.status(500).json({ message: "Send failed" });

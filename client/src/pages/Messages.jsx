@@ -1,8 +1,27 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import { io } from "socket.io-client";
+import { useRef } from "react";
 
 export default function Messages() {
   const [messages, setMessages] = useState([]);
+  const socketRef = useRef(null);
+
+  useEffect(() => {
+    socketRef.current = io("https://edubloom-app.onrender.com");
+
+    socketRef.current.on("new_message", (msg) => {
+      setMessages((prev) => {
+        const exists = prev.find((m) => m._id === msg._id);
+        if (exists) return prev;
+        return [msg, ...prev];
+      });
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     fetchMessages();
@@ -16,12 +35,24 @@ export default function Messages() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const unreadCount = messages.filter(
-    (msg) => !msg.readBy?.includes(user._id),
+    (msg) =>
+      (!msg.userId || msg.userId === user._id) &&
+      !msg.readBy?.includes(user._id),
   ).length;
 
   const openMessage = async (id) => {
     await API.put(`/messages/read/${id}`);
-    fetchMessages();
+
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg._id === id
+          ? {
+              ...msg,
+              readBy: [...(msg.readBy || []), user._id],
+            }
+          : msg,
+      ),
+    );
   };
 
   return (
@@ -50,6 +81,9 @@ export default function Messages() {
           <span className="text-xs text-gray-400">
             {new Date(msg.createdAt).toLocaleString()}
           </span>
+          {msg.role === "admin" && (
+            <span>{msg.readBy?.includes(user._id) ? "✔✔ Seen" : "✔ Sent"}</span>
+          )}
         </div>
       ))}
     </div>
