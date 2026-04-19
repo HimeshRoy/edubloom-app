@@ -5,30 +5,39 @@ import LiveClass from "../models/LiveClass.js";
 import Lecture from "../models/Lecture.js";
 import Note from "../models/Note.js";
 
+import User from "../models/User.js";
+
 export const getAllStudents = async (req, res) => {
-    try {
-        const students = await User.find({ role: "student" }).select("-password");
-        res.json(students);
-    } catch {
-        res.status(500).json({ message: "Error" });
-    }
+  try {
+    const students = await User.find({ role: "student" })
+      .select("-password")
+      .sort({ createdAt: -1 });
+
+    res.json(students);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching students" });
+  }
 };
 
 export const getStudentDetails = async (req, res) => {
-    try {
-        const student = await User.findById(req.params.id).select("-password");
+  try {
+    const student = await User.findById(req.params.id).select("-password");
 
-        const logs = await StudyLog.find({ userId: student._id });
-        const messages = await Message.find({ userId: student._id });
+    const logs = await StudyLog.find({ userId: student._id })
+      .sort({ createdAt: -1 })
+      .limit(10);
 
-        res.json({
-            student,
-            logs,
-            messages,
-        });
-    } catch {
-        res.status(500).json({ message: "Error" });
-    }
+    const totalHours = logs.reduce((sum, log) => sum + log.duration, 0);
+
+    res.json({
+      student,
+      logs,
+      totalHours,
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching student details" });
+  }
 };
 
 export const getAdminDashboard = async (req, res) => {

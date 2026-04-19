@@ -25,6 +25,7 @@ export const signup = async (req, res) => {
       class: className,
       studentId,
       studentEmail,
+      role: "student",
     });
 
     res.json({
