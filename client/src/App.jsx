@@ -20,6 +20,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminStudents from "./pages/AdminStudents";
 import AdminStudentDetail from "./pages/AdminStudentDetail";
 import AdminLectures from "./pages/AdminLectures";
+import AdminNotes from "./pages/AdminNotes";
+import AdminClasses from "./pages/AdminClasses";
 
 
 function App() {
@@ -61,6 +63,8 @@ function App() {
         <Route path="students" element={<AdminStudents />} />
         <Route path="student/:id" element={<AdminStudentDetail />} />
         <Route path="/admin/lectures" element={<AdminLectures />} />
+        <Route path="/admin/notes" element={<AdminNotes />} />
+        <Route path="/admin/classes" element={<AdminClasses />} />
       </Route>
 
     </Routes>

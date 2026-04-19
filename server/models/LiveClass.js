@@ -3,17 +3,30 @@ import mongoose from "mongoose";
 const liveClassSchema = new mongoose.Schema({
   subject: {
     type: String,
-    enum: ["Math", "Physics", "Chemistry", "Biology"],
+    enum: ["Maths", "Physics", "Chemistry", "Biology"],
     required: true,
   },
 
-  teacher: String,
+  teacher: {
+    type: String,
+    required: true,
+  },
 
-  time: String,
+  time: {
+    type: String,
+    required: true,
+  },
 
-  meetLink: String,
+  meetLink: {
+    type: String,
+    required: true,
+  },
 
   date: {
+    type: Date,
+    required: true,
+  },
+  createdAt: {
     type: Date,
     default: Date.now,
   },
