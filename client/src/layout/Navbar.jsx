@@ -4,7 +4,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  let user = {};
+
+  try {
+    const stored = localStorage.getItem("user");
+    if (stored && stored !== "undefined") {
+      user = JSON.parse(stored);
+    }
+  } catch (e) {
+    console.log("User parse error", e);
+  }
 
   const [showNotif, setShowNotif] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -13,7 +22,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   return (
@@ -22,8 +31,8 @@ export default function Navbar() {
       <div className="h-16 backdrop-blur-lg bg-white/40 shadow flex items-center justify-between px-6">
         {/* LEFT */}
         <p className="text-sm font-medium">
-          🎓 {user?.name} | {user?.studentEmail}
-        </p>
+  🎓 {user?.name || "Student"} | {user?.studentEmail || ""}
+</p>
 
         {/* RIGHT */}
         <div className="flex items-center gap-5">

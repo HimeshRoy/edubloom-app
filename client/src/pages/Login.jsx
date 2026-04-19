@@ -19,11 +19,15 @@ export default function Login() {
       setLoading(true);
 
       const res = await API.post("/auth/login", form);
-
+      console.log("LOGIN RESPONSE 👉", res.data);
       // 🔐 SAVE DATA
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      if (res.data.user) {
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+      } else {
+        console.log(" user not coming from backend");
+      }
 
       toast.success("Welcome back");
 
