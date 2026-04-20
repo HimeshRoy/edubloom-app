@@ -15,22 +15,47 @@ export default function Signup() {
     phone: "",
     state: "",
     className: "10",
+    otp: "",
   });
 
   const [loading, setLoading] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
 
   // 🔐 Password validation
   const isValidPassword = (password) => {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(
-      password,
-    );
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password);
   };
 
+  // 🔥 SEND OTP
+  const handleSendOtp = async () => {
+    if (!form.email) return toast.error("Enter email first 😏");
+
+    try {
+      setLoading(true);
+
+      await API.post("/auth/send-otp", {
+        email: form.email,
+      });
+
+      toast.success("OTP sent to email 📩");
+      setOtpSent(true);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "OTP failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🔥 FINAL SIGNUP
   const handleSignup = async () => {
     if (!isValidPassword(form.password)) {
       return toast.error(
-        "Password must be 8+ chars with A-Z, a-z, number & special char 😏",
+        "Password must be strong 😏 (A-Z, a-z, number, special)"
       );
+    }
+
+    if (!form.otp) {
+      return toast.error("Enter OTP 😤");
     }
 
     try {
@@ -38,11 +63,9 @@ export default function Signup() {
 
       const res = await API.post("/auth/signup", form);
 
-      toast.success(`Account created 🎉 ID: ${res.data.studentId}`);
+      toast.success("Account created 🎉");
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
       toast.error(err.response?.data?.message || "Signup failed");
     } finally {
@@ -53,87 +76,113 @@ export default function Signup() {
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600">
       <div className="w-[900px] bg-white rounded-3xl shadow-2xl flex overflow-hidden">
-        {/* LEFT FORM */}
+        
+        {/* LEFT */}
         <div className="w-1/2 p-10">
           <h2 className="text-2xl font-bold mb-6">Create Account</h2>
 
           <div className="space-y-4">
-            {/* Name */}
+
+            {/* NAME */}
             <div className="flex items-center bg-gray-100 p-3 rounded-full">
-              <FaUser className="text-purple-500 mr-3" />
+              <FaUser className="mr-3 text-purple-500" />
               <input
                 placeholder="Full Name"
                 className="bg-transparent outline-none w-full"
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, name: e.target.value })
+                }
               />
             </div>
 
-            {/* Email */}
+            {/* EMAIL */}
             <div className="flex items-center bg-gray-100 p-3 rounded-full">
-              <FaEnvelope className="text-purple-500 mr-3" />
+              <FaEnvelope className="mr-3 text-purple-500" />
               <input
                 placeholder="Email"
                 className="bg-transparent outline-none w-full"
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, email: e.target.value })
+                }
               />
             </div>
 
-            {/* Password */}
+            {/* SEND OTP BUTTON */}
+            {!otpSent && (
+              <button
+                onClick={handleSendOtp}
+                className="w-full py-2 rounded-full bg-blue-500 text-white"
+              >
+                {loading ? "Sending..." : "Send OTP"}
+              </button>
+            )}
+
+            {/* OTP INPUT */}
+            {otpSent && (
+              <input
+                placeholder="Enter OTP"
+                className="w-full p-3 rounded-full bg-gray-100 outline-none"
+                onChange={(e) =>
+                  setForm({ ...form, otp: e.target.value })
+                }
+              />
+            )}
+
+            {/* PASSWORD */}
             <div className="flex items-center bg-gray-100 p-3 rounded-full">
-              <FaLock className="text-purple-500 mr-3" />
+              <FaLock className="mr-3 text-purple-500" />
               <input
                 type="password"
                 placeholder="Password"
                 className="bg-transparent outline-none w-full"
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, password: e.target.value })
+                }
               />
             </div>
 
-            {/* Phone */}
+            {/* PHONE */}
             <div className="flex items-center bg-gray-100 p-3 rounded-full">
-              <FaPhone className="text-purple-500 mr-3" />
+              <FaPhone className="mr-3 text-purple-500" />
               <input
                 placeholder="Mobile Number"
                 className="bg-transparent outline-none w-full"
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, phone: e.target.value })
+                }
               />
             </div>
 
-            {/* State */}
+            {/* STATE */}
             <select
               className="w-full p-3 rounded-full bg-gray-100 outline-none"
-              onChange={(e) => setForm({ ...form, state: e.target.value })}
-              defaultValue=""
+              onChange={(e) =>
+                setForm({ ...form, state: e.target.value })
+              }
             >
-              <option value="" disabled>
-                Select State / UT
-              </option>
-
-              {indiaStates.map((state, index) => (
-                <option key={index} value={state}>
-                  {state}
-                </option>
+              <option value="">Select State</option>
+              {indiaStates.map((s, i) => (
+                <option key={i}>{s}</option>
               ))}
             </select>
           </div>
 
-          {/* BUTTON */}
-          <button
-            onClick={handleSignup}
-            className="mt-6 w-full py-3 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold"
-          >
-            {loading ? "Creating..." : "CREATE ACCOUNT"}
-          </button>
+          {/* FINAL BUTTON */}
+          {otpSent && (
+            <button
+              onClick={handleSignup}
+              className="mt-6 w-full py-3 rounded-full bg-purple-600 text-white"
+            >
+              {loading ? "Creating..." : "CREATE ACCOUNT"}
+            </button>
+          )}
         </div>
 
-        {/* RIGHT SIDE */}
+        {/* RIGHT */}
         <div className="w-1/2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white flex items-center justify-center">
-          <div className="text-center px-6">
-            <img src="" alt="" />
-            <h1 className="text-2xl font-bold">Welcome to EduBloom</h1>
-            <p className="mt-2 text-sm opacity-80">
-              Learn smarter. Grow faster.
-            </p>
+          <div className="text-center">
+            <h1 className="text-2xl font-bold">EduBloom</h1>
+            <p className="mt-2 text-sm">Learn smarter. Grow faster.</p>
           </div>
         </div>
       </div>

@@ -22,12 +22,13 @@ const userSchema = new mongoose.Schema({
 
     phone: {
         type: String,
-        default: "",
+        required: true,
+        unique: true,
     },
 
     state: {
         type: String,
-        default: "",
+        required: true,
     },
 
     studentId: {
