@@ -94,6 +94,7 @@ export default function Login() {
         {/* RIGHT */}
         <div className="w-1/2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white flex items-center justify-center">
           <div className="text-center px-6">
+            <img src="https://res.cloudinary.com/dpmpmxyfn/image/upload/v1776680542/edubloomLogo.png" alt="logo" width={220} />
             <h2 className="text-2xl font-bold">EduBloom</h2>
             <p className="mt-2 text-sm opacity-80">
               Learn smarter. Grow faster.

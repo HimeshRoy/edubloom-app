@@ -4,12 +4,13 @@ import jwt from "jsonwebtoken";
 import { generateStudent } from "../utils/generateId.js";
 import Otp from "../models/Otp.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import { getWelcomeTemplate } from "../utils/emailTemplates.js";
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, password, className, phone, state, otp  } = req.body;
+    const { name, email, password, className, phone, state, otp } = req.body;
 
-     // 🔥 verify OTP
+    // 🔥 verify OTP
     const record = await Otp.findOne({ email });
 
     if (!record) {
@@ -56,6 +57,16 @@ export const signup = async (req, res) => {
       role: "student",
     });
 
+    await sendEmail(
+  email,
+  "🎉 Welcome to EduBloom",
+  getWelcomeTemplate({
+    name,
+    studentId,
+    studentEmail,
+  })
+);
+
     res.json({
       message: "Signup success",
       studentId,
@@ -70,7 +81,7 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
- const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select("+password");
 
   if (!user) return res.status(400).json({ message: "No user" });
 
@@ -106,6 +117,12 @@ export const sendOtp = async (req, res) => {
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
+    const existingOtp = await Otp.findOne({ email });
+
+    if (existingOtp && existingOtp.expiresAt > Date.now()) {
+      return res.status(400).json({ message: "OTP already sent, wait..." });
+    }
+
     // 🔥 delete old OTP
     await Otp.deleteMany({ email });
 
@@ -116,8 +133,40 @@ export const sendOtp = async (req, res) => {
       expiresAt: Date.now() + 5 * 60 * 1000,
     });
 
-    // 🔥 send email
-    await sendEmail(email, "Your OTP", `Your OTP is ${otp}`);
+    // 🔥 HTML EMAIL
+    const html = `
+      <div style="font-family: Arial; background:#f4f6f8; padding:20px;">
+        <div style="max-width:500px; margin:auto; background:white; padding:30px; border-radius:10px; text-align:center;">
+          
+          <h2 style="color:#6C5CE7;">📖 EduBloom</h2>
+          
+          <p style="font-size:16px;">Your One-Time Password (OTP)</p>
+          
+          <div style="
+            background: linear-gradient(90deg, #6C5CE7, #a29bfe);
+            color:white;
+            padding:10px;
+            border-radius:8px;
+            display:inline-block;
+            font-size:22px;
+            letter-spacing:3px;
+          ">
+            ${otp}
+          </div>
+          
+          <p style="color:gray;">Valid for 5 minutes ⏳</p>
+          
+          <hr style="margin:20px 0;" />
+          
+          <p style="font-size:12px; color:#999;">
+            If you didn’t request this, ignore this email.
+          </p>
+        </div>
+      </div>
+    `;
+
+    // 🔥 send ONLY ONCE
+    await sendEmail(email, "Your OTP - EduBloom", html);
 
     res.json({ message: "OTP sent successfully" });
 

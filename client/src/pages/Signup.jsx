@@ -28,7 +28,7 @@ export default function Signup() {
 
   // 🔥 SEND OTP
   const handleSendOtp = async () => {
-    if (!form.email) return toast.error("Enter email first 😏");
+    if (!form.email) return toast.error("Enter email first");
 
     try {
       setLoading(true);
@@ -50,12 +50,12 @@ export default function Signup() {
   const handleSignup = async () => {
     if (!isValidPassword(form.password)) {
       return toast.error(
-        "Password must be strong 😏 (A-Z, a-z, number, special)"
+        "Password must be strong (A-Z, a-z, number, special)"
       );
     }
 
     if (!form.otp) {
-      return toast.error("Enter OTP 😤");
+      return toast.error("Enter OTP");
     }
 
     try {
@@ -63,9 +63,9 @@ export default function Signup() {
 
       const res = await API.post("/auth/signup", form);
 
-      toast.success("Account created 🎉");
+      toast.success("Account created");
 
-      setTimeout(() => navigate("/login"), 1500);
+      setTimeout(() => navigate("/dashboard"), 1500);
     } catch (err) {
       toast.error(err.response?.data?.message || "Signup failed");
     } finally {
@@ -181,6 +181,7 @@ export default function Signup() {
         {/* RIGHT */}
         <div className="w-1/2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white flex items-center justify-center">
           <div className="text-center">
+            <img src="https://res.cloudinary.com/dpmpmxyfn/image/upload/v1776680542/edubloomLogo.png" alt="logo" width={300} />
             <h1 className="text-2xl font-bold">EduBloom</h1>
             <p className="mt-2 text-sm">Learn smarter. Grow faster.</p>
           </div>
