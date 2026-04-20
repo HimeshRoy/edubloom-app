@@ -1,9 +1,9 @@
 export const getWelcomeTemplate = ({ name, studentId, studentEmail }) => {
-  return `
+    return `
  <div style="font-family: Arial; background:#f4f6f8; padding:20px;">
     <div style="max-width:600px; margin:auto; background:white; padding:30px; border-radius:12px;">
       
-      <h2 style="background: linear-gradient(90deg,#6C5CE7,#a29bfe); -webkit-background-clip: text; color: transparent;">Welcome to EduBloom </h2>
+      <h2 style="background: linear-gradient(90deg,#6C5CE7,#a29bfe); -webkit-background-clip: text; color: transparent;">🎉 Welcome to EduBloom, Your Journey Starts Now 🚀</h2>
 
       <p style="font-size:16px;">Hi <b>${name}</b>,</p>
 
@@ -28,12 +28,18 @@ export const getWelcomeTemplate = ({ name, studentId, studentEmail }) => {
 
        <h3 style="color:#6C5CE7;">📚 Courses </h3>
       <ul style="color:#555;">
-        <li>✔ Mathematics</li>
-        <li>✔ Sceience (Physics, Chemsitry and Biology)</li>
+        <li> Mathematics</li>
+        <li> Sceience (Physics, Chemsitry and Biology)</li>
       </ul>
 
       <br>
       <br>
+      <div style="text-align:center; margin:20px 0;">
+  <a href="https://edubloom-app.vercel.app"
+     style="background:#6C5CE7; color:white; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:bold;">
+     🚀 Start Learning Now
+  </a>
+</div>
 
       <div style="text-align:center; margin:25px 0;">
         <a href="https://whatsapp.com/channel/0029VbA2OQAJUM2aHgfbF01h"

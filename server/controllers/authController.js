@@ -21,7 +21,7 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "OTP expired" });
     }
 
-    if (record.otp !== otp) {
+    if (record.otp !== otp.trim()) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
@@ -45,19 +45,21 @@ export const signup = async (req, res) => {
     // 🔥 GENERATE STUDENT ID
     const { studentId, studentEmail } = await generateStudent(className);
 
-    const user = await User.create({
-      name,
-      email,
-      phone,
-      state,
-      password: hashed,
-      class: className,
-      studentId,
-      studentEmail,
-      role: "student",
-    });
+    // 🔥 create user
+const user = await User.create({
+  name,
+  email,
+  phone,
+  state,
+  password: hashed,
+  class: className,
+  studentId,
+  studentEmail,
+  role: "student",
+});
 
-    await sendEmail(
+// 🔥 send welcome email
+await sendEmail(
   email,
   "🎉 Welcome to EduBloom",
   getWelcomeTemplate({
@@ -67,15 +69,43 @@ export const signup = async (req, res) => {
   })
 );
 
-    res.json({
-      message: "Signup success",
-      studentId,
-      studentEmail,
-    });
+// 🔥 generate token
+const token = jwt.sign(
+  {
+    id: user._id,
+    role: user.role,
+  },
+  process.env.JWT_SECRET,
+  { expiresIn: "7d" }
+);
+
+// 🔥 FINAL RESPONSE (ONLY ONE 😏)
+res.json({
+  message: "Signup success",
+  token,
+  role: user.role,
+  user,
+});
 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+
+  const token = jwt.sign(
+    {
+      id: user._id,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+
+  res.json({
+    message: "Signup success",
+    token,
+    role: user.role,
+    user,
+  });
 };
 
 export const login = async (req, res) => {

@@ -23,7 +23,9 @@ export default function Signup() {
 
   // 🔐 Password validation
   const isValidPassword = (password) => {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password);
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(
+      password,
+    );
   };
 
   // 🔥 SEND OTP
@@ -49,9 +51,7 @@ export default function Signup() {
   // 🔥 FINAL SIGNUP
   const handleSignup = async () => {
     if (!isValidPassword(form.password)) {
-      return toast.error(
-        "Password must be strong (A-Z, a-z, number, special)"
-      );
+      return toast.error("Password must be strong (A-Z, a-z, number, special)");
     }
 
     if (!form.otp) {
@@ -63,9 +63,15 @@ export default function Signup() {
 
       const res = await API.post("/auth/signup", form);
 
-      toast.success("Account created");
+      // 🔥 save login
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      setTimeout(() => navigate("/dashboard"), 1500);
+      // 🔥 welcome popup
+      toast.success(`Welcome ${res.data.user.name} 🚀`);
+
+      // 🔥 go dashboard
+      navigate("/dashboard");
     } catch (err) {
       toast.error(err.response?.data?.message || "Signup failed");
     } finally {
@@ -76,22 +82,18 @@ export default function Signup() {
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600">
       <div className="w-[900px] bg-white rounded-3xl shadow-2xl flex overflow-hidden">
-        
         {/* LEFT */}
         <div className="w-1/2 p-10">
           <h2 className="text-2xl font-bold mb-6">Create Account</h2>
 
           <div className="space-y-4">
-
             {/* NAME */}
             <div className="flex items-center bg-gray-100 p-3 rounded-full">
               <FaUser className="mr-3 text-purple-500" />
               <input
                 placeholder="Full Name"
                 className="bg-transparent outline-none w-full"
-                onChange={(e) =>
-                  setForm({ ...form, name: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
             </div>
 
@@ -101,9 +103,7 @@ export default function Signup() {
               <input
                 placeholder="Email"
                 className="bg-transparent outline-none w-full"
-                onChange={(e) =>
-                  setForm({ ...form, email: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
             </div>
 
@@ -122,9 +122,7 @@ export default function Signup() {
               <input
                 placeholder="Enter OTP"
                 className="w-full p-3 rounded-full bg-gray-100 outline-none"
-                onChange={(e) =>
-                  setForm({ ...form, otp: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, otp: e.target.value })}
               />
             )}
 
@@ -135,9 +133,7 @@ export default function Signup() {
                 type="password"
                 placeholder="Password"
                 className="bg-transparent outline-none w-full"
-                onChange={(e) =>
-                  setForm({ ...form, password: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
             </div>
 
@@ -147,18 +143,14 @@ export default function Signup() {
               <input
                 placeholder="Mobile Number"
                 className="bg-transparent outline-none w-full"
-                onChange={(e) =>
-                  setForm({ ...form, phone: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
               />
             </div>
 
             {/* STATE */}
             <select
               className="w-full p-3 rounded-full bg-gray-100 outline-none"
-              onChange={(e) =>
-                setForm({ ...form, state: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, state: e.target.value })}
             >
               <option value="">Select State</option>
               {indiaStates.map((s, i) => (
@@ -181,7 +173,11 @@ export default function Signup() {
         {/* RIGHT */}
         <div className="w-1/2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white flex items-center justify-center">
           <div className="text-center">
-            <img src="https://res.cloudinary.com/dpmpmxyfn/image/upload/v1776680542/edubloomLogo.png" alt="logo" width={300} />
+            <img
+              src="https://res.cloudinary.com/dpmpmxyfn/image/upload/v1776680542/edubloomLogo.png"
+              alt="logo"
+              width={300}
+            />
             <h1 className="text-2xl font-bold">EduBloom</h1>
             <p className="mt-2 text-sm">Learn smarter. Grow faster.</p>
           </div>
