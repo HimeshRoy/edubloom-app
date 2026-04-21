@@ -34,7 +34,7 @@ export const getWelcomeTemplate = ({ name, studentId, studentEmail }) => {
 
       <br>
       <br>
-      <div style="text-align:center; margin:20px 0;">
+      <div style="text-align:center; margin:30px 0;">
   <a href="https://edubloom-app.vercel.app"
      style="background:#6C5CE7; color:white; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:bold;">
      🚀 Start Learning Now

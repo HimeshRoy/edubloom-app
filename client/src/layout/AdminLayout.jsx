@@ -1,4 +1,15 @@
 import { Outlet, Link, useNavigate } from "react-router-dom";
+import {
+  FaHome,
+  FaVideo,
+  FaBook,
+  FaFileAlt,
+  FaClipboardList,
+  FaComments,
+  FaWhatsapp,
+  FaUserCircle,
+  FaInbox,
+} from "react-icons/fa";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -17,46 +28,46 @@ export default function AdminLayout() {
 
         <nav className="flex flex-col gap-4 text-sm">
           <Link className="hover:bg-white/10 p-2 rounded-lg" to="/admin">
-            📊 Dashboard
+            <FaHome/> Dashboard
           </Link>
 
           <Link
             className="hover:bg-white/10 p-2 rounded-lg"
             to="/admin/students"
           >
-            👨‍🎓 Students
+            <FaUserCircle/> Students
           </Link>
 
           <Link
             className="hover:bg-white/10 p-2 rounded-lg"
             to="/admin/lectures"
           >
-            🎥 Lectures
+            <FaFileAlt/> Lectures
           </Link>
 
           <Link className="hover:bg-white/10 p-2 rounded-lg" to="/admin/notes">
-            📚 Notes
+            <FaBook/> Notes
           </Link>
 
           <Link
             className="hover:bg-white/10 p-2 rounded-lg"
             to="/admin/classes"
           >
-            🧑‍🏫 Classes
+            <FaVideo/> Classes
           </Link>
 
           <Link
             className="hover:bg-white/10 p-2 rounded-lg"
             to="/admin/messages"
           >
-            💬 Messages
+            <FaInbox/> Messages
           </Link>
 
           <Link
             className="hover:bg-white/10 p-2 rounded-lg"
             to="/admin/chat"
           >
-            💬 chat
+            <FaWhatsapp/> chat
           </Link>
         </nav>
       </div>
