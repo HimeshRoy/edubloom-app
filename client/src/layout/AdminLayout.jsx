@@ -27,47 +27,47 @@ export default function AdminLayout() {
         <h2 className="text-2xl font-bold mb-8">EduBloom</h2>
 
         <nav className="flex flex-col gap-4 text-sm">
-          <Link className="hover:bg-white/10 p-2 rounded-lg" to="/admin">
-            <FaHome/> Dashboard
+          <Link className="hover:bg-white/10 p-2 rounded-lg flex items-center gap-3" to="/admin">
+           <span className="text-lg"><FaHome/> </span> <span>Dashboard</span> 
           </Link>
 
           <Link
-            className="hover:bg-white/10 p-2 rounded-lg"
+            className="hover:bg-white/10 p-2 rounded-lg flex items-center gap-3"
             to="/admin/students"
           >
-            <FaUserCircle/> Students
+             <span className="text-lg"><FaUserCircle/></span> <span>Students</span>
           </Link>
 
           <Link
-            className="hover:bg-white/10 p-2 rounded-lg"
+            className="hover:bg-white/10 p-2 rounded-lg flex items-center gap-3"
             to="/admin/lectures"
           >
-            <FaFileAlt/> Lectures
+            <span className="text-lg"><FaFileAlt/></span> <span>Lectures</span>
           </Link>
 
-          <Link className="hover:bg-white/10 p-2 rounded-lg" to="/admin/notes">
-            <FaBook/> Notes
+          <Link className="hover:bg-white/10 p-2 rounded-lg flex items-center gap-3" to="/admin/notes">
+            <span className="text-lg"><FaBook/></span> <span>Notes</span>
           </Link>
 
           <Link
-            className="hover:bg-white/10 p-2 rounded-lg"
+            className="hover:bg-white/10 p-2 rounded-lg flex items-center gap-3"
             to="/admin/classes"
           >
-            <FaVideo/> Classes
+           <span className="text-lg"><FaVideo/></span>  <span>Classes</span>
           </Link>
 
           <Link
-            className="hover:bg-white/10 p-2 rounded-lg"
+            className="hover:bg-white/10 p-2 rounded-lg flex items-center gap-3"
             to="/admin/messages"
           >
-            <FaInbox/> Messages
+           <span className="text-lg"><FaInbox/></span>  <span>Messages</span>
           </Link>
 
           <Link
-            className="hover:bg-white/10 p-2 rounded-lg"
+            className="hover:bg-white/10 p-2 rounded-lg flex items-center gap-3"
             to="/admin/chat"
           >
-            <FaWhatsapp/> chat
+            <span className="text-lg"><FaWhatsapp/></span> <span>chat</span>
           </Link>
         </nav>
       </div>
