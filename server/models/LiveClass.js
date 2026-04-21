@@ -17,6 +17,11 @@ const liveClassSchema = new mongoose.Schema({
     required: true,
   },
 
+  endTime: {
+    type: String,
+    required: true,
+  },
+
   meetLink: {
     type: String,
     required: true,

@@ -81,12 +81,22 @@ export default function AdminClasses() {
           className="border p-2 w-full rounded"
         />
 
+        <label htmlFor="startTime"><p className="text-gray-500 mt-2">Enter start time</p></label>
         <input
           type="time"
           placeholder="Select time"
           value={form.time}
           onChange={(e) => setForm({ ...form, time: e.target.value })}
+          className="border p-2 w-full rounded mb-2"
+          id="startTime"
+        />
+        <label htmlFor="endTime"><p className="text-gray-500 mt-2">Enter end time</p></label>
+        <input
+          type="time"
+          value={form.endTime}
+          onChange={(e) => setForm({ ...form, endTime: e.target.value })}
           className="border p-2 w-full rounded"
+          id="endTime"
         />
 
         <input

@@ -68,7 +68,7 @@ export default function Notes() {
       {filteredNotes.length === 0 ? (
         <p className="text-gray-500">No notes found</p>
       ) : (
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           {filteredNotes.map((note) => (
             <div
               key={note._id}

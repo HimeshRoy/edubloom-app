@@ -53,20 +53,24 @@ export default function LiveClass() {
     return `${hour}:${m} ${ampm}`;
   };
 
-  const isLiveNow = (cls) => {
+  const getStatus = (cls) => {
     const now = new Date();
 
     const classDate = new Date(cls.date);
 
-    const [h, m] = cls.time.split(":");
+    const [sh, sm] = cls.time.split(":");
+    const [eh, em] = cls.endTime.split(":");
 
-    classDate.setHours(h, m, 0);
+    const startTime = new Date(classDate);
+    startTime.setHours(sh, sm, 0);
 
-    const diff = (now - classDate) / 60000; // minutes
+    const endTime = new Date(classDate);
+    endTime.setHours(eh, em, 0);
 
-    return diff >= 0 && diff <= 60; // 1 hour window
+    if (now < startTime) return "Not Started";
+    if (now >= startTime && now <= endTime) return "Live Now 🔴";
+    if (now > endTime) return "Ended";
   };
-
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">🎥 Live Classes</h1>
@@ -81,7 +85,7 @@ export default function LiveClass() {
       )}
 
       {/* ✅ CLASS LIST */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-3 md:grid-cols-3 gap-6">
         {classes.map((cls) => (
           <div
             key={cls._id}
@@ -94,7 +98,7 @@ export default function LiveClass() {
             <p className="text-sm opacity-80">👨‍🏫 {cls.teacher}</p>
 
             <p className="text-sm mb-4 opacity-80">🕒{formatTime(cls.time)}</p>
-            {isLiveNow(cls) && (
+            {getStatus(cls) === "Live Now 🔴" && (
               <span className="bg-red-500 px-2 py-1 text-xs rounded-full ml-2">
                 🔴 LIVE
               </span>
@@ -102,14 +106,16 @@ export default function LiveClass() {
 
             <button
               onClick={() => joinClass(cls)}
-              disabled={!isLiveNow(cls)}
+              disabled={getStatus(cls) !== "Live Now 🔴"}
               className={`w-full p-2 rounded-lg transition ${
-                isLiveNow(cls)
+                getStatus(cls) === "Live Now 🔴"
                   ? "bg-white text-black hover:scale-105"
                   : "bg-gray-300 text-gray-600 cursor-not-allowed"
               }`}
             >
-              {isLiveNow(cls) ? "🚀 Join Now" : "Not Started"}
+              {getStatus(cls) === "Live Now 🔴"
+                ? "🚀 Join Now"
+                : getStatus(cls)}
             </button>
           </div>
         ))}

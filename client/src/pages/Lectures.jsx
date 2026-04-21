@@ -76,7 +76,7 @@ export default function Lectures() {
       {filteredLectures.length === 0 ? (
         <p className="text-gray-500">No lectures found</p>
       ) : (
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           {filteredLectures.map((lec) => (
             <div
               key={lec._id}
