@@ -21,24 +21,16 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
 
-  // 🔐 Password validation
   const isValidPassword = (password) => {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(
-      password,
-    );
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password);
   };
 
-  // 🔥 SEND OTP
   const handleSendOtp = async () => {
     if (!form.email) return toast.error("Enter email first");
 
     try {
       setLoading(true);
-
-      await API.post("/auth/send-otp", {
-        email: form.email,
-      });
-
+      await API.post("/auth/send-otp", { email: form.email });
       toast.success("OTP sent to email 📩");
       setOtpSent(true);
     } catch (err) {
@@ -48,29 +40,22 @@ export default function Signup() {
     }
   };
 
-  // 🔥 FINAL SIGNUP
   const handleSignup = async () => {
     if (!isValidPassword(form.password)) {
-      return toast.error("Password must be strong (A-Z, a-z, number, special)");
+      return toast.error("Password must be strong");
     }
 
-    if (!form.otp) {
-      return toast.error("Enter OTP");
-    }
+    if (!form.otp) return toast.error("Enter OTP");
 
     try {
       setLoading(true);
 
       const res = await API.post("/auth/signup", form);
 
-      // 🔥 save login
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      // 🔥 welcome popup
-      toast.success(`Welcome ${res.data.user.name} 🚀`);
-
-      // 🔥 go dashboard
+      toast.success(`Welcome ${res.data.user.name}`);
       navigate("/dashboard");
     } catch (err) {
       toast.error(err.response?.data?.message || "Signup failed");
@@ -80,19 +65,36 @@ export default function Signup() {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600">
-      <div className="w-[900px] bg-white rounded-3xl shadow-2xl flex overflow-hidden">
-        {/* LEFT */}
-        <div className="w-1/2 p-10">
-          <h2 className="text-2xl font-bold mb-6">Create Account</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600 px-4">
+
+      {/* MAIN CARD */}
+      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl flex flex-col md:flex-row overflow-hidden">
+
+        {/* LEFT FORM */}
+        <div className="w-full md:w-1/2 p-6 md:p-10">
+
+          {/* MOBILE LOGO */}
+          <div className="md:hidden text-center mb-6">
+            <img
+              src="https://res.cloudinary.com/dpmpmxyfn/image/upload/v1776680542/edubloomLogo.png"
+              alt="logo"
+              className="mx-auto w-24"
+            />
+            <h2 className="text-xl font-bold mt-2">EduBloom</h2>
+          </div>
+
+          <h2 className="text-xl md:text-2xl font-bold mb-6">
+            Create Account
+          </h2>
 
           <div className="space-y-4">
+
             {/* NAME */}
             <div className="flex items-center bg-gray-100 p-3 rounded-full">
               <FaUser className="mr-3 text-purple-500" />
               <input
                 placeholder="Full Name"
-                className="bg-transparent outline-none w-full"
+                className="bg-transparent outline-none w-full text-sm"
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />
             </div>
@@ -102,12 +104,12 @@ export default function Signup() {
               <FaEnvelope className="mr-3 text-purple-500" />
               <input
                 placeholder="Email"
-                className="bg-transparent outline-none w-full"
+                className="bg-transparent outline-none w-full text-sm"
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
             </div>
 
-            {/* SEND OTP BUTTON */}
+            {/* SEND OTP */}
             {!otpSent && (
               <button
                 onClick={handleSendOtp}
@@ -117,11 +119,11 @@ export default function Signup() {
               </button>
             )}
 
-            {/* OTP INPUT */}
+            {/* OTP */}
             {otpSent && (
               <input
                 placeholder="Enter OTP"
-                className="w-full p-3 rounded-full bg-gray-100 outline-none"
+                className="w-full p-3 rounded-full bg-gray-100 outline-none text-sm"
                 onChange={(e) => setForm({ ...form, otp: e.target.value })}
               />
             )}
@@ -132,7 +134,7 @@ export default function Signup() {
               <input
                 type="password"
                 placeholder="Password"
-                className="bg-transparent outline-none w-full"
+                className="bg-transparent outline-none w-full text-sm"
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
             </div>
@@ -142,14 +144,14 @@ export default function Signup() {
               <FaPhone className="mr-3 text-purple-500" />
               <input
                 placeholder="Mobile Number"
-                className="bg-transparent outline-none w-full"
+                className="bg-transparent outline-none w-full text-sm"
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
               />
             </div>
 
             {/* STATE */}
             <select
-              className="w-full p-3 rounded-full bg-gray-100 outline-none"
+              className="w-full p-3 rounded-full bg-gray-100 outline-none text-sm"
               onChange={(e) => setForm({ ...form, state: e.target.value })}
             >
               <option value="">Select State</option>
@@ -170,18 +172,19 @@ export default function Signup() {
           )}
         </div>
 
-        {/* RIGHT */}
-        <div className="w-1/2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white flex items-center justify-center">
+        {/* RIGHT SIDE (HIDE IN MOBILE) */}
+        <div className="hidden md:flex w-1/2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white items-center justify-center">
           <div className="text-center">
             <img
               src="https://res.cloudinary.com/dpmpmxyfn/image/upload/v1776680542/edubloomLogo.png"
               alt="logo"
-              width={300}
+              width={260}
             />
-            <h1 className="text-2xl font-bold">EduBloom</h1>
+            <h1 className="text-2xl font-bold mt-4">EduBloom</h1>
             <p className="mt-2 text-sm">Learn smarter. Grow faster.</p>
           </div>
         </div>
+
       </div>
     </div>
   );

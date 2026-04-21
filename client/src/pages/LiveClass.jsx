@@ -85,7 +85,7 @@ export default function LiveClass() {
       )}
 
       {/* ✅ CLASS LIST */}
-      <div className="grid grid-cols-3 md:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1  gap-6">
         {classes.map((cls) => (
           <div
             key={cls._id}

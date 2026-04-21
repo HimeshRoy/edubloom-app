@@ -53,9 +53,12 @@ export default function Sidebar() {
       </div>
 
       {/* WHATSAPP BUTTON (BOTTOM FIXED) */}
-      <button className="flex items-center justify-center gap-2 bg-lime-600 w-full p-3 rounded-lg text-sm hover:scale-105 transition">
+      <button className="flex items-center justify-center gap-2 bg-lime-600 w-full p-3 rounded-lg text-sm hover:scale-105 transition"
+       onClick={() =>
+    window.open("https://whatsapp.com/channel/0029VbA2OQAJUM2aHgfbF01h", "_blank")
+  }>
         <FaWhatsapp className="text-lg" />
-        Join WhatsApp
+        Join WhatsApp Channel
       </button>
 
     </div>

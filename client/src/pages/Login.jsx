@@ -19,19 +19,15 @@ export default function Login() {
       setLoading(true);
 
       const res = await API.post("/auth/login", form);
-      // console.log("LOGIN RESPONSE 👉", res.data);
-      // 🔐 SAVE DATA
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
       if (res.data.user) {
         localStorage.setItem("user", JSON.stringify(res.data.user));
-      } else {
-        console.log(" user not coming from backend");
       }
 
       toast.success("Welcome back");
 
-      // 🔥 ROLE BASED REDIRECT
       setTimeout(() => {
         if (res.data.role === "admin") {
           navigate("/admin");
@@ -45,34 +41,59 @@ export default function Login() {
       setLoading(false);
     }
   };
+
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600">
-      <div className="w-[900px] bg-white rounded-3xl shadow-2xl flex overflow-hidden">
-        {/* LEFT */}
-        <div className="w-1/2 p-10">
-          <h2 className="text-2xl font-bold mb-6">Welcome Back 👋</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600 px-4">
+
+      {/* MAIN CARD */}
+      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl flex flex-col md:flex-row overflow-hidden">
+
+        {/* LEFT (FORM) */}
+        <div className="w-full md:w-1/2 p-6 md:p-10">
+
+          {/* MOBILE LOGO */}
+          <div className="md:hidden text-center mb-6">
+            <img
+              src="https://res.cloudinary.com/dpmpmxyfn/image/upload/v1776680542/edubloomLogo.png"
+              alt="logo"
+              className="mx-auto w-24"
+            />
+            <h2 className="text-xl font-bold mt-2">EduBloom</h2>
+          </div>
+
+          <h2 className="text-xl md:lg:text-2xl text-center font-bold mb-6">
+            Welcome Back
+          </h2>
 
           <div className="space-y-4">
+
+            {/* EMAIL */}
             <div className="flex items-center bg-gray-100 p-3 rounded-full">
               <FaEnvelope className="text-purple-500 mr-3" />
               <input
                 placeholder="Email"
-                className="bg-transparent outline-none w-full"
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="bg-transparent outline-none w-full text-sm"
+                onChange={(e) =>
+                  setForm({ ...form, email: e.target.value })
+                }
               />
             </div>
 
+            {/* PASSWORD */}
             <div className="flex items-center bg-gray-100 p-3 rounded-full">
               <FaLock className="text-purple-500 mr-3" />
               <input
                 type="password"
                 placeholder="Password"
-                className="bg-transparent outline-none w-full"
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                className="bg-transparent outline-none w-full text-sm"
+                onChange={(e) =>
+                  setForm({ ...form, password: e.target.value })
+                }
               />
             </div>
           </div>
 
+          {/* BUTTON */}
           <button
             onClick={handleLogin}
             className="mt-6 w-full py-3 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold"
@@ -80,7 +101,8 @@ export default function Login() {
             {loading ? "Logging in..." : "LOGIN"}
           </button>
 
-          <p className="mt-4 text-sm text-gray-500">
+          {/* SIGNUP */}
+          <p className="mt-4 text-sm text-gray-500 text-center md:text-left">
             New here?{" "}
             <span
               className="text-purple-600 cursor-pointer"
@@ -91,11 +113,15 @@ export default function Login() {
           </p>
         </div>
 
-        {/* RIGHT */}
-        <div className="w-1/2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white flex items-center justify-center">
+        {/* RIGHT (HIDE IN MOBILE) */}
+        <div className="hidden md:flex w-1/2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white items-center justify-center">
           <div className="text-center px-6">
-            <img src="https://res.cloudinary.com/dpmpmxyfn/image/upload/v1776680542/edubloomLogo.png" alt="logo" width={220} />
-            <h2 className="text-2xl font-bold">EduBloom</h2>
+            <img
+              src="https://res.cloudinary.com/dpmpmxyfn/image/upload/v1776680542/edubloomLogo.png"
+              alt="logo"
+              width={220}
+            />
+            <h2 className="text-2xl font-bold mt-4">EduBloom</h2>
             <p className="mt-2 text-sm opacity-80">
               Learn smarter. Grow faster.
             </p>

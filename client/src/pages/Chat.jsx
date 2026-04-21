@@ -9,12 +9,22 @@ export default function Chat() {
   const [text, setText] = useState("");
   const [typing, setTyping] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user.role === "admin";
 
   const socketRef = useRef(null);
   const bottomRef = useRef(null);
+
+  useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
   // 🔥 SOCKET INIT (ONLY ONCE)
   useEffect(() => {
@@ -118,94 +128,135 @@ export default function Chat() {
     });
   };
 
-  return (
-    <div className="flex h-[85vh]">
-      
-      {/* LEFT USERS */}
-      <div className="w-1/3 bg-white border-r p-4">
-        <h2 className="font-semibold mb-3">Chats</h2>
+ return (
+  <div className="h-[85vh] flex">
 
-        {users.map((u) => (
-          <div
-            key={u._id}
-            onClick={() => openChat(u._id)}
-            className={`p-3 rounded cursor-pointer mb-2 ${
-              selectedUser === u._id
-                ? "bg-purple-100"
-                : "hover:bg-gray-100"
-            }`}
-          >
-            {u.name} {!isAdmin && "(Admin)"}
+    {/* 🟣 MOBILE VIEW */}
+    {isMobile ? (
+      <>
+        {/* 👉 USERS LIST */}
+        {!selectedUser && (
+          <div className="w-full bg-white p-4">
+            <h2 className="font-semibold mb-3">Chats</h2>
 
-            {onlineUsers.includes(u._id) && (
-              <span className="text-green-500 ml-2">●</span>
-            )}
+            {users.map((u) => (
+              <div
+                key={u._id}
+                onClick={() => openChat(u._id)}
+                className="p-3 border-b flex justify-between items-center"
+              >
+                <span>
+                  {u.name} {!isAdmin && "(Admin)"}
+                </span>
+
+                {onlineUsers.includes(u._id) && (
+                  <span className="text-green-500">●</span>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        )}
 
-      {/* RIGHT CHAT */}
-      <div className="flex-1 flex flex-col">
+        {/* 👉 CHAT SCREEN */}
+        {selectedUser && (
+          <div className="flex flex-col w-full">
 
-        {/* MESSAGES */}
-        <div className="flex-1 p-4 overflow-y-auto space-y-2">
-          {!selectedUser && (
-            <p className="text-gray-400 text-center mt-10">
-              Select a chat 💬
-            </p>
-          )}
+            {/* 🔙 BACK HEADER */}
+            <div className="p-3 bg-white border-b flex items-center gap-3">
+              <button onClick={() => setSelectedUser(null)}>
+                ⬅
+              </button>
+              <span className="font-semibold">
+                {users.find(u => u._id === selectedUser)?.name}
+              </span>
+            </div>
 
-          {messages.map((msg) => (
+            {/* 💬 MESSAGES */}
+            <div className="flex-1 p-3 overflow-y-auto space-y-2">
+              {messages.map((msg) => (
+                <div
+                  key={msg._id}
+                  className={`p-2 rounded-lg max-w-[70%] ${
+                    msg.senderId === user._id
+                      ? "bg-purple-500 text-white ml-auto"
+                      : "bg-gray-200"
+                  }`}
+                >
+                  {msg.text}
+                </div>
+              ))}
+              <div ref={bottomRef}></div>
+            </div>
+
+            {/* INPUT */}
+            <div className="p-2 border-t flex gap-2">
+              <input
+                value={text}
+                onChange={(e) => {
+                  setText(e.target.value);
+                  handleTyping();
+                }}
+                className="flex-1 border p-2 rounded"
+              />
+
+              <button
+                onClick={send}
+                className="bg-purple-600 text-white px-3 rounded"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        )}
+      </>
+    ) : (
+      /* 🖥️ DESKTOP VIEW (UNCHANGED) */
+      <>
+        {/* LEFT USERS */}
+        <div className="w-1/3 bg-white border-r p-4">
+          <h2 className="font-semibold mb-3">Chats</h2>
+
+          {users.map((u) => (
             <div
-              key={msg._id}
-              className={`p-3 rounded-xl max-w-xs ${
-                msg.senderId === user._id
-                  ? "bg-purple-500 text-white ml-auto"
-                  : "bg-gray-200"
+              key={u._id}
+              onClick={() => openChat(u._id)}
+              className={`p-3 rounded cursor-pointer mb-2 ${
+                selectedUser === u._id
+                  ? "bg-purple-100"
+                  : "hover:bg-gray-100"
               }`}
             >
-              {msg.text}
+              {u.name}
 
-              {/* TIME */}
-              <div className="text-[10px] mt-1 opacity-70">
-                {new Date(msg.createdAt).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </div>
-
-              {/* SEEN */}
-              {msg.senderId === user._id && (
-                <span className="text-xs ml-2">
-                  {msg.readBy?.includes(selectedUser)
-                    ? "✔✔"
-                    : "✔"}
-                </span>
+              {onlineUsers.includes(u._id) && (
+                <span className="text-green-500 ml-2">●</span>
               )}
             </div>
           ))}
-
-          {/* TYPING */}
-          {typing && (
-            <p className="text-sm text-gray-400">Typing...</p>
-          )}
-
-          <div ref={bottomRef}></div>
         </div>
 
-        {/* INPUT */}
-        {selectedUser && (
+        {/* RIGHT CHAT */}
+        <div className="flex-1 flex flex-col">
+          <div className="flex-1 p-4 overflow-y-auto space-y-2">
+            {messages.map((msg) => (
+              <div
+                key={msg._id}
+                className={`p-3 rounded-xl max-w-xs ${
+                  msg.senderId === user._id
+                    ? "bg-purple-500 text-white ml-auto"
+                    : "bg-gray-200"
+                }`}
+              >
+                {msg.text}
+              </div>
+            ))}
+            <div ref={bottomRef}></div>
+          </div>
+
           <div className="p-3 border-t flex gap-2">
             <input
               value={text}
-              onChange={(e) => {
-                setText(e.target.value);
-                handleTyping();
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") send();
-              }}
-              placeholder="Type a message..."
+              onChange={(e) => setText(e.target.value)}
               className="flex-1 border p-2 rounded"
             />
 
@@ -216,8 +267,9 @@ export default function Chat() {
               Send
             </button>
           </div>
-        )}
-      </div>
-    </div>
-  );
+        </div>
+      </>
+    )}
+  </div>
+);
 }

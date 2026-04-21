@@ -25,7 +25,6 @@ import AdminClasses from "./pages/AdminClasses";
 import AdminMessages from "./pages/AdminMessages";
 import Chat from "./pages/Chat";
 
-
 function App() {
   return (
     <Routes>
@@ -57,7 +56,7 @@ function App() {
       <Route
         path="/admin"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute role="admin">
             <AdminLayout />
           </ProtectedRoute>
         }
@@ -65,11 +64,11 @@ function App() {
         <Route index element={<AdminDashboard />} />
         <Route path="students" element={<AdminStudents />} />
         <Route path="student/:id" element={<AdminStudentDetail />} />
-        <Route path="/admin/lectures" element={<AdminLectures />} />
-        <Route path="/admin/notes" element={<AdminNotes />} />
-        <Route path="/admin/classes" element={<AdminClasses />} />
-        <Route path="/admin/messages" element={<AdminMessages />} />
-        <Route path="/admin/chat" element={<Chat />} />
+        <Route path="lectures" element={<AdminLectures />} />
+        <Route path="notes" element={<AdminNotes />} />
+        <Route path="classes" element={<AdminClasses />} />
+        <Route path="messages" element={<AdminMessages />} />
+        <Route path="chat" element={<Chat />} />
       </Route>
 
     </Routes>
