@@ -10,6 +10,12 @@ import Profile from "./pages/Profile";
 import Lectures from "./pages/Lectures";
 import Notes from "./pages/Notes";
 import Messages from "./pages/Messages";
+import TestInstructions from "./pages/TestInstructions";
+import Tests from "./pages/Tests";
+import TestPlayer from "./pages/TestPlayer";
+import AdminTests from "./pages/AdminTests";
+import AdminTestList from "./pages/AdminTestList";
+import Result from "./pages/Result";
 
 import MainLayout from "./layout/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -24,11 +30,12 @@ import AdminNotes from "./pages/AdminNotes";
 import AdminClasses from "./pages/AdminClasses";
 import AdminMessages from "./pages/AdminMessages";
 import Chat from "./pages/Chat";
+import AdminEditTest from "./pages/AdminEditTest";
+
 
 function App() {
   return (
     <Routes>
-
       {/* 🔓 PUBLIC */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
@@ -50,6 +57,10 @@ function App() {
         <Route path="notes" element={<Notes />} />
         <Route path="messages" element={<Messages />} />
         <Route path="chat" element={<Chat />} />
+        <Route path="/tests" element={<Tests />} />
+        <Route path="/test/:id" element={<TestInstructions />} />
+        <Route path="/test/:id/start" element={<TestPlayer />} />
+        <Route path="/result/:id" element={<Result />} />
       </Route>
 
       {/* 👑 ADMIN */}
@@ -69,8 +80,10 @@ function App() {
         <Route path="classes" element={<AdminClasses />} />
         <Route path="messages" element={<AdminMessages />} />
         <Route path="chat" element={<Chat />} />
+        <Route path="tests" element={<AdminTests />} />
+        <Route path="/admin/test-list" element={<AdminTestList />} />
+        <Route path="tests/:id/edit" element={<AdminEditTest />} />
       </Route>
-
     </Routes>
   );
 }

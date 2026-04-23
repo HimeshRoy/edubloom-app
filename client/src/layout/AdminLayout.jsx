@@ -58,10 +58,25 @@ export default function AdminLayout() {
 
           <Link
             className="hover:bg-white/10 p-2 rounded-lg flex items-center gap-3"
+            to="/admin/tests"
+          >
+            <span className="text-lg">< FaClipboardList/></span> <span>Create Test</span>
+          </Link>
+
+          <Link
+            className="hover:bg-white/10 p-2 rounded-lg flex items-center gap-3"
+            to="/admin/test-list"
+          >
+            <span className="text-lg">< FaClipboardList/></span> <span>Test List</span>
+          </Link>
+
+          <Link
+            className="hover:bg-white/10 p-2 rounded-lg flex items-center gap-3"
             to="/admin/messages"
           >
            <span className="text-lg"><FaInbox/></span>  <span>Messages</span>
           </Link>
+
 
           <Link
             className="hover:bg-white/10 p-2 rounded-lg flex items-center gap-3"

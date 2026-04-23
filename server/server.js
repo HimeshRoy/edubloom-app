@@ -10,6 +10,7 @@ import lectureRoutes from "./routes/lectureRoutes.js";
 import noteRoutes from "./routes/noteRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
+import testRoutes from "./routes/testRoutes.js";
 
 import User from "./models/User.js";
 import bcrypt from "bcryptjs";
@@ -108,6 +109,7 @@ app.use("/api/lectures", lectureRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/tests", testRoutes);
 
 // 🔥 FINAL START (ONLY THIS)
 server.listen(PORT, () => {

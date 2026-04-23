@@ -88,9 +88,6 @@ export default function Navbar() {
               className="fixed right-0 top-0 w-80 h-full bg-white shadow-lg p-4 z-50"
             >
               <h2 className="font-semibold mb-4">Notifications</h2>
-
-              <p className="text-sm">📢 New class at 5 PM</p>
-              <p className="text-sm mt-2">📝 Test tomorrow</p>
             </motion.div>
           </>
         )}
