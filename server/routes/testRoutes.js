@@ -36,4 +36,5 @@ router.get("/", getTests);
 // ❌ ALWAYS LAST
 router.get("/:id", getTest);
 
+console.log("🔥 NEW ROUTES FILE LOADED");
 export default router;
