@@ -20,7 +20,7 @@ export default function AdminTests() {
   // ✅ CREATE TEST
   const createTest = async () => {
     try {
-      const res = await API.post("/tests/create", form);
+      const res = await API.post("/tests/create-test", form);
       setTestId(res.data._id);
       toast.success("Test Created");
     } catch (err) {

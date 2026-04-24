@@ -16,10 +16,11 @@ import { uploadCSV } from "../utils/csvUpload.js";
 const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
+console.log("🔥 ROUTES UPDATED V2");
 
 // 🔥 STATIC ROUTES FIRST
 router.get("/admin/all", getAllTestsAdmin);
-router.post("/create", createTest);
+router.post("/create-test", createTest);
 router.post("/submit", submitTest);
 
 // 🔥 OTHER SPECIFIC ROUTES
