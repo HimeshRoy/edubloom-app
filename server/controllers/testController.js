@@ -4,6 +4,8 @@ import Result from "../models/Result.js";
 // ✅ CREATE TEST
 export const createTest = async (req, res) => {
   try {
+    console.log("🔥 BODY:", req.body);
+
     const {
       title,
       subject,
@@ -22,47 +24,20 @@ export const createTest = async (req, res) => {
     const test = await Test.create({
       title,
       subject,
-      className, // ✅ FIXED
-      startTime,
-      endTime,
-      marksPerQuestion,
-      timePerQuestion,
+      className,
+      startTime: startTime ? new Date(startTime) : null,
+      endTime: endTime ? new Date(endTime) : null,
+      marksPerQuestion: Number(marksPerQuestion),
+      timePerQuestion: Number(timePerQuestion),
       instructions,
     });
 
-    
-    res.json(test);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-// ✅ ADD QUESTION
-export const addQuestion = async (req, res) => {
-  try {
-    const { question, options, correct, image } = req.body;
-
-    const test = await Test.findById(req.params.id);
-
-    if (!test) {
-      return res.status(404).json({ message: "Test not found" });
-    }
-
-    if (!question || !options || correct === undefined) {
-      return res.status(400).json({ message: "Invalid question data" });
-    }
-
-    test.questions.push({
-      question,
-      options,
-      correct,
-      image: image || "",
-    });
-
-    await test.save();
+    console.log("✅ TEST CREATED:", test._id);
 
     res.json(test);
+
   } catch (err) {
+    console.log("❌ FULL ERROR:", err); // 🔥 IMPORTANT
     res.status(500).json({ message: err.message });
   }
 };
