@@ -1,7 +1,6 @@
 import express from "express";
 import {
   createTest,
-  addQuestion,
   getTests,
   getTest,
   publishTest,
@@ -23,7 +22,6 @@ router.post("/create-test", createTest);
 router.post("/submit", submitTest);
 
 // 🔥 2. PARAM ROUTES (SPECIFIC)
-router.post("/:id/question", addQuestion);
 router.post("/:id/upload", upload.single("file"), uploadCSV);
 router.put("/:id/publish", publishTest);
 router.delete("/:id", deleteTest);
