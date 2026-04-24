@@ -95,7 +95,7 @@ export default function AdminTests() {
             type="number"
             className="input"
             onChange={(e) =>
-              setForm({ ...form, marksPerQuestion: e.target.value })
+              setForm({ ...form, marksPerQuestion: Number(e.target.value) })
             }
           />
 
@@ -104,7 +104,7 @@ export default function AdminTests() {
             type="number"
             className="input"
             onChange={(e) =>
-              setForm({ ...form, timePerQuestion: e.target.value })
+              setForm({ ...form, timePerQuestion: Number(e.target.value) })
             }
           />
         </div>

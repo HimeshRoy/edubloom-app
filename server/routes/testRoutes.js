@@ -16,15 +16,19 @@ const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
 
+
+router.get("/admin/all", getAllTestsAdmin);
 router.post("/create", createTest);
+router.post("/submit", submitTest);
+
 router.post("/:id/question", addQuestion);
 router.post("/:id/upload", upload.single("file"), uploadCSV);
-router.get("/", getTests);
-router.get("/admin/all", getAllTestsAdmin);
-router.get("/:id", getTest);
+
 router.put("/:id/publish", publishTest);
 router.delete("/:id", deleteTest);
-router.post("/submit", submitTest);
+
 router.get("/result/:id", getResult);
+router.get("/:id", getTest); // ALWAYS LAST 😈
+router.get("/", getTests);
 
 export default router;
