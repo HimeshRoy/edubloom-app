@@ -6,7 +6,7 @@ export default function AdminTests() {
   const [form, setForm] = useState({
     title: "",
     subject: "",
-    class: "",
+    className: "",
     startTime: "",
     endTime: "",
     marksPerQuestion: 4,
@@ -66,7 +66,7 @@ export default function AdminTests() {
         <input
           placeholder="Class"
           className="input"
-          onChange={(e) => setForm({ ...form, class: e.target.value })}
+          onChange={(e) => setForm({ ...form, className: e.target.value })}
         />
 
         {/* TIME */}
