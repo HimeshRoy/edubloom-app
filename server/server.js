@@ -33,6 +33,11 @@ const io = new Server(server, {
   },
 });
 
+app.use((req, res, next) => {
+  console.log("👉", req.method, req.originalUrl);
+  next();
+});
+
 // 🔥 MAKE IO GLOBAL
 app.set("io", io);
 
