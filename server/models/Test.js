@@ -55,7 +55,10 @@ const testSchema = new mongoose.Schema(
 
     instructions: String,
 
-    questions: [questionSchema],
+    questions: {
+      type: [questionSchema],
+      default: [], // 🔥 THIS SAVES YOU
+    },
 
     totalMarks: Number,
 
@@ -80,13 +83,12 @@ const testSchema = new mongoose.Schema(
 );
 
 // 🔥 AUTO CALC BEFORE SAVE
-testSchema.pre("save", function (next) {
-  this.totalQuestions = this.questions.length;
-  this.totalMarks = this.questions.length * this.marksPerQuestion;
-  this.duration =
-    (this.questions.length * this.timePerQuestion) / 60;
+testSchema.pre("save", function () {
+  const qLen = this.questions?.length || 0;
 
-  next();
+  this.totalQuestions = qLen;
+  this.totalMarks = qLen * (this.marksPerQuestion || 0);
+  this.duration = (qLen * (this.timePerQuestion || 0)) / 60;
 });
 
 export default mongoose.model("Test", testSchema);
