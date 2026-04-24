@@ -11,6 +11,7 @@ import noteRoutes from "./routes/noteRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import testRoutes from "./routes/testRoutes.js";
+import cors from "cors";
 
 import User from "./models/User.js";
 import bcrypt from "bcryptjs";
@@ -20,7 +21,7 @@ import http from "http";
 
 dotenv.config();
 connectDB();
-
+app.use(cors());
 const PORT = process.env.PORT || 5000;
 
 // 🔥 CREATE SERVER (IMPORTANT)

@@ -11,7 +11,14 @@ export const uploadCSV = (req, res) => {
     .on("end", async () => {
       const test = await Test.findById(req.params.id);
 
-      results.forEach((q) => {
+      results.forEach((q, index) => {
+        const correctIndex = parseInt(q.correct);
+
+        if (!q.question || isNaN(correctIndex)) {
+          console.log("❌ SKIPPED ROW:", index, q);
+          return;
+        }
+
         test.questions.push({
           question: q.question,
           image: q.image || "",
@@ -21,7 +28,7 @@ export const uploadCSV = (req, res) => {
             q.option3,
             q.option4,
           ],
-          correct: Number(q.correct),
+          correct: correctIndex,
         });
       });
 
