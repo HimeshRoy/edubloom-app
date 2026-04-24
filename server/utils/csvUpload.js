@@ -12,9 +12,24 @@ export const uploadCSV = (req, res) => {
       const test = await Test.findById(req.params.id);
 
       results.forEach((q, index) => {
-        const correctIndex = parseInt(q.correct);
+        let correctIndex = parseInt(q.correct);
 
-        if (!q.question || isNaN(correctIndex)) {
+        if (isNaN(correctIndex) && q.answer) {
+          const options = [
+            q.option1,
+            q.option2,
+            q.option3,
+            q.option4,
+          ];
+
+          correctIndex = options.findIndex(
+            (opt) =>
+              opt?.toString().trim().toLowerCase() ===
+              q.answer.toString().trim().toLowerCase()
+          );
+        }
+
+        if (!q.question || correctIndex === -1) {
           console.log("❌ SKIPPED ROW:", index, q);
           return;
         }
