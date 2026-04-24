@@ -21,8 +21,7 @@ export default function TestPlayer() {
   const lastFlagTime = useRef(0);
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
-  const AI_URL =
-    import.meta.env.VITE_AI_URL || "https://your-ai-server.onrender.com";
+ const AI_URL = import.meta.env.VITE_AI_URL;
 
   useEffect(() => {
     const load = async () => {
@@ -339,6 +338,26 @@ export default function TestPlayer() {
 
     return () => clearInterval(interval);
   }, []);
+
+  const sendFrameToAI = async (image) => {
+  try {
+    const res = await fetch(`${AI_URL}/detect`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ image }),
+    });
+
+    const data = await res.json();
+
+    if (data.cheating) {
+      console.log("Cheating detected");
+    }
+  } catch (err) {
+    console.log("AI error", err);
+  }
+};
 
   return (
     <div className="flex h-screen bg-gray-100">
