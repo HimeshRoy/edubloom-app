@@ -10,32 +10,29 @@ import {
   submitTest,
   getResult,
 } from "../controllers/testController.js";
+
 import multer from "multer";
 import { uploadCSV } from "../utils/csvUpload.js";
 
 const upload = multer({ dest: "uploads/" });
-
 const router = express.Router();
-console.log("🔥 ROUTES UPDATED V2");
 
-// 🔥 STATIC ROUTES FIRST
+// 🔥 1. STATIC ROUTES (NO PARAMS)
 router.get("/admin/all", getAllTestsAdmin);
 router.post("/create-test", createTest);
 router.post("/submit", submitTest);
 
-// 🔥 OTHER SPECIFIC ROUTES
+// 🔥 2. PARAM ROUTES (SPECIFIC)
 router.post("/:id/question", addQuestion);
 router.post("/:id/upload", upload.single("file"), uploadCSV);
 router.put("/:id/publish", publishTest);
 router.delete("/:id", deleteTest);
-
 router.get("/result/:id", getResult);
 
-// ✅ THIS MUST COME BEFORE :id
+// 🔥 3. LIST ROUTE
 router.get("/", getTests);
 
-// ❌ ALWAYS LAST
+// ❌ 4. ALWAYS LAST (MOST IMPORTANT)
 router.get("/:id", getTest);
 
-console.log("🔥 NEW ROUTES FILE LOADED");
 export default router;
